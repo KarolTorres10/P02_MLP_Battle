@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Little Pony: Guardianes de la armonía</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="CSS/style.css">
+</head>
+<body>
+  <div id="marco">
+    <main id="juego" class="juego" data-pantalla="inicio">
+      <canvas id="escenario" class="escenario"></canvas>
+      <div id="chip-clima" class="chip-clima panel-pix" title="Hora y clima en tiempo real (Open-Meteo)"></div>
+      <div id="aviso" class="aviso panel-pix is-hidden" role="status"></div>
+
+      <!-- ============ INICIO ============ -->
+      <section id="pantalla-inicio" class="pantalla">
+        <h1 class="titulo-juego">MY LITTLE PONY</h1>
+        <p class="subtitulo-juego"><span>★</span> Guardianes de la armonía <span>★</span></p>
+        <div class="trio">
+          <img src="IMG/ponis/twilight.png" alt="Twilight Sparkle">
+          <img src="IMG/ponis/rainbow-dash.png" alt="Rainbow Dash">
+          <img src="IMG/ponis/pinkie-pie.png" alt="Pinkie Pie" class="volteado">
+        </div>
+        <button id="btn-comenzar" class="btn-pix btn-grande btn-dorado" type="button">★ COMENZAR ★</button>
+        <p class="pulsa-tecla">Pulsa cualquier tecla</p>
+      </section>
+
+      <!-- ============ MENÚ PRINCIPAL ============ -->
+      <section id="pantalla-menu" class="pantalla is-hidden">
+        <div class="encabezado panel-pix izq"><span>★</span> MENÚ PRINCIPAL <span>★</span></div>
+        <nav class="menu-botones">
+          <button id="menu-continuar" class="btn-pix btn-menu btn-dorado" type="button"><span>★</span><span id="menu-continuar-texto">Continuar</span></button>
+          <button id="menu-nueva" class="btn-pix btn-menu" type="button">Nueva aventura</button>
+          <button id="menu-personajes" class="btn-pix btn-menu" type="button">Personajes</button>
+          <button id="menu-ajustes" class="btn-pix btn-menu" type="button">Ajustes</button>
+        </nav>
+        <div id="menu-pie" class="panel-pix menu-pie"></div>
+        <img class="menu-poni" src="IMG/ponis/twilight.png" alt="Twilight Sparkle">
+      </section>
+
+      <!-- ============ MODOS DE JUEGO ============ -->
+      <section id="pantalla-modos" class="pantalla is-hidden">
+        <button class="btn-pix btn-atras" id="modos-atras" type="button" aria-label="Volver">←</button>
+        <div class="encabezado panel-pix"><span>★</span> MODOS DE JUEGO <span>★</span></div>
+        <div class="columns is-mobile modos-lista">
+          <div class="column is-4">
+            <button class="tarjeta-modo bloqueado" data-modo="historia" type="button">
+              <div class="ilustracion ilu-historia"><span class="gran-emoji">🏰</span><span class="candado">🔒</span></div>
+              <div class="texto"><strong>Historia</strong><small>Explora Equestria</small></div>
+            </button>
+          </div>
+          <div class="column is-4">
+            <button class="tarjeta-modo" data-modo="duelo" type="button">
+              <div class="ilustracion ilu-duelo">
+                <img src="IMG/ponis/twilight.png" alt=""><img src="IMG/ponis/rainbow-dash.png" alt="" class="volteado">
+              </div>
+              <div class="texto"><strong>Duelo</strong><small>Batalla local 3 vs 3</small></div>
+            </button>
+          </div>
+          <div class="column is-4">
+            <button class="tarjeta-modo" data-modo="desafio" type="button">
+              <div class="ilustracion ilu-desafio"><span class="gran-emoji">🔮</span><span class="estrellas">★★★</span></div>
+              <div class="texto"><strong>Desafíos</strong><small>Rondas infinitas</small></div>
+            </button>
+          </div>
+        </div>
+        <button id="modos-continuar" class="btn-pix btn-continuar-modos" type="button">★ CONTINUAR ★</button>
+      </section>
+
+      <!-- ============ SELECCIÓN DE PONI ============ -->
+      <section id="pantalla-ponis" class="pantalla is-hidden">
+        <button class="btn-pix btn-atras" id="ponis-atras" type="button" aria-label="Volver">←</button>
+        <div class="encabezado panel-pix izq"><span>★</span> <span id="ponis-titulo">ELIGE TU PONI</span> <span>★</span></div>
+        <div id="ponis-grid" class="columns is-mobile is-multiline ponis-grid"></div>
+        <div class="ponis-detalle">
+          <div class="escenario-poni"><img id="ponis-sprite" alt=""><div class="plataforma"></div></div>
+          <div class="panel-pix ficha">
+            <h3 id="ficha-nombre"></h3>
+            <span id="ficha-tipo" class="tag ficha-tipo"></span>
+            <div class="stat"><span>Vida</span><div class="segmentos" id="stat-vida"></div></div>
+            <div class="stat"><span>Magia</span><div class="segmentos" id="stat-magia"></div></div>
+            <div class="stat"><span>Defensa</span><div class="segmentos" id="stat-defensa"></div></div>
+            <div id="ficha-habilidades" class="ficha-habilidades is-hidden"></div>
+          </div>
+          <div id="ponis-equipo" class="equipo-elegido is-hidden"></div>
+          <button id="ponis-confirmar" class="btn-pix btn-grande btn-dorado" type="button">★ CONFIRMAR ★</button>
+        </div>
+      </section>
+
+      <!-- ============ SELECCIÓN DE CARTAS (MEJORAS) ============ -->
+      <section id="pantalla-cartas" class="pantalla is-hidden">
+        <div class="encabezado panel-pix"><span>★</span> ELIGE UNA MEJORA <span>★</span></div>
+        <div class="cartas-poni"><img id="cartas-sprite" alt=""></div>
+        <div id="cartas-nombre" class="panel-pix chip-cartas chip-nombre"></div>
+        <div id="cartas-ronda" class="panel-pix chip-cartas chip-ronda"></div>
+        <div id="cartas-lista" class="columns is-mobile cartas-lista"></div>
+        <div class="panel-pix cartas-ayuda"><span>📖</span> La mejora elegida se aplica de forma permanente</div>
+        <button id="cartas-confirmar" class="btn-pix btn-continuar-modos btn-dorado" type="button" disabled>★ A LA BATALLA ★</button>
+      </section>
+
+      <!-- ============ BATALLA ============ -->
+      <section id="pantalla-batalla" class="pantalla is-hidden">
+        <div id="hud-a" class="hud hud-a panel-pix">
+          <div class="hud-retrato"><img alt=""></div>
+          <div class="hud-info">
+            <div class="hud-nombre"></div>
+            <div class="hud-fila">
+              <span class="ico-vida">♥</span>
+              <div class="barra"><div class="barra-relleno"></div><span class="barra-texto"></span></div>
+              <span class="hud-dato hud-escudo" title="Escudo">🛡️<b>0</b></span>
+              <span class="hud-dato hud-ataque" title="Daño máximo">⚔️<b>0</b></span>
+            </div>
+            <div class="hud-equipo"></div>
+          </div>
+        </div>
+        <div id="banner" class="banner panel-pix"></div>
+        <div id="hud-b" class="hud hud-b panel-pix">
+          <div class="hud-retrato"><img alt=""></div>
+          <div class="hud-info">
+            <div class="hud-nombre"></div>
+            <div class="hud-fila">
+              <span class="ico-vida">♥</span>
+              <div class="barra"><div class="barra-relleno"></div><span class="barra-texto"></span></div>
+              <span class="hud-dato hud-escudo" title="Escudo">🛡️<b>0</b></span>
+              <span class="hud-dato hud-ataque" title="Daño máximo">⚔️<b>0</b></span>
+            </div>
+            <div class="hud-equipo"></div>
+          </div>
+        </div>
+        <button id="btn-pausa" class="btn-pix btn-pausa" type="button" aria-label="Pausa">❚❚</button>
+
+        <div id="campo" class="campo">
+          <div id="luchador-a" class="luchador lado-a"><div class="anim"><img alt=""></div><div class="estados"></div></div>
+          <div id="luchador-b" class="luchador lado-b"><div class="anim"><img alt=""></div><div class="estados"></div></div>
+          <div id="flotantes" class="flotantes"></div>
+          <div id="anuncio" class="anuncio panel-pix is-hidden"></div>
+        </div>
+
+        <div class="panel-inferior panel-pix">
+          <div class="energia"><div id="energia-valor">3/3</div><span>ENERGÍA</span></div>
+          <div id="mano" class="mano"></div>
+          <button id="btn-fin-turno" class="btn-pix btn-fin-turno" type="button">FIN DEL<br>TURNO</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="girar"><div>↻<br>Gira tu dispositivo<br>para jugar</div></div>
+
+  <!-- Ventana emergente reutilizable (Bulma modal) -->
+  <div id="modal" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p id="modal-titulo" class="modal-card-title"></p>
+        <button id="modal-x" class="delete" type="button" aria-label="Cerrar"></button>
+      </header>
+      <section id="modal-cuerpo" class="modal-card-body"></section>
+      <footer id="modal-pie" class="modal-card-foot"></footer>
+    </div>
+  </div>
+
+  <script src="JS/config.js"></script>
+  <script src="JS/almacen.js"></script>
+  <script src="JS/datos.js"></script>
+  <script src="JS/clima.js"></script>
+  <script src="JS/escenario.js"></script>
+  <script src="JS/motor.js"></script>
+  <script src="JS/menus.js"></script>
+  <script src="JS/batalla.js"></script>
+  <script src="JS/main.js"></script>
+</body>
+</html>
