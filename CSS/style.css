@@ -1,11 +1,3 @@
-/* =====================================================================
-   My Little Pony: Guardianes de la armonía
-   - Bulma aporta modales, botones base, columnas, tags y notificaciones.
-   - Este archivo da el estilo pixel-art y el escalado del juego.
-   - Todo el escenario mide 16:9 y usa unidades "cqw" (1cqw = 1% del ancho
-     del juego), así que cada pantalla se reduce o crece sin deformarse.
-   ===================================================================== */
-
 html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 #marco { position: fixed; inset: 0; display: grid; place-items: center; }
 
@@ -28,7 +20,7 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 .escenario { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; }
 .pantalla { position: absolute; inset: 0; }
 
-/* ---------- Piezas reutilizables ---------- */
+/* Paneles reutilizables */
 .panel-pix {
   background: #3a1840;
   color: #f8ecc0;
@@ -76,7 +68,10 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 .chip-clima .icono { font-size: 2.2cqw; }
 .chip-clima b { font-size: 1.9cqw; }
 .juego[data-pantalla="batalla"] .chip-clima { top: 11.6cqw; left: 50%; right: auto; transform: translateX(-50%); }
-.juego[data-pantalla="menu"] .chip-clima, .juego[data-pantalla="inicio"] .chip-clima { top: 1.2cqw; }
+.juego[data-pantalla="menu"] .chip-clima { top: 1.2cqw; }
+
+/* INICIO = chip clima */
+.juego[data-pantalla="inicio"] .chip-clima { top: auto; bottom: 1.5cqw; right: 1.5cqw; }
 
 .aviso {
   position: absolute; top: 11cqw; left: 50%; transform: translateX(-50%); z-index: 30;
@@ -84,34 +79,45 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
   border-color: #ffe45e;
 }
 
-/* ---------- Inicio ---------- */
-.titulo-juego {
-  position: absolute; top: 4.5cqw; left: 0; right: 0; margin: 0; text-align: center;
-  font-size: 9.6cqw; font-weight: 700; letter-spacing: .2cqw; color: #fff2b8;
-  text-shadow: .45cqw 0 0 #3a1840, -.45cqw 0 0 #3a1840, 0 -.45cqw 0 #3a1840, .45cqw .45cqw 0 #3a1840,
-               -.45cqw .45cqw 0 #3a1840, 0 1cqw 0 #5a2b6e, 0 1.5cqw 0 rgba(0, 0, 0, .35);
-}
-.subtitulo-juego {
-  position: absolute; top: 17.8cqw; left: 0; right: 0; margin: 0; text-align: center;
-  font-size: 3.4cqw; font-weight: 600; color: #fff2b8;
-  text-shadow: .25cqw 0 0 #3a1840, -.25cqw 0 0 #3a1840, 0 .25cqw 0 #3a1840, 0 -.25cqw 0 #3a1840;
-}
-.subtitulo-juego span { color: #ffe45e; }
+/* Inicio */
+.titulo-juego { position: absolute; top: 3cqw; left: 50%; width: 62cqw; margin: 0 0 0 -31cqw; }
+.titulo-juego img { display: block; width: 100%; height: auto; image-rendering: auto; filter: drop-shadow(0 .6cqw 0 rgba(0, 0, 0, .25)); }
+
 .trio { position: absolute; left: 14cqw; right: 14cqw; bottom: 16.5cqw; height: 18.5cqw; display: flex; justify-content: space-around; align-items: flex-end; }
 .trio img { height: 100%; width: auto; filter: drop-shadow(0 .6cqw 0 rgba(0, 0, 0, .25)); }
 .trio img:nth-child(2) { height: 100%; }
-#btn-comenzar { position: absolute; left: 50%; margin-left: -16cqw; width: 32cqw; bottom: 8cqw; }
+
+.btn-imagen {
+  all: unset;
+  box-sizing: border-box;
+  display: block;
+  cursor: pointer;
+  transition: transform .12s ease, filter .12s ease;
+}
+.btn-imagen img {
+  display: block; width: 100%; height: auto;
+  image-rendering: auto;
+  pointer-events: none;
+}
+
+.btn-imagen:hover  { transform: translateY(-.3cqw) scale(1.05); filter: brightness(1.12); }
+.btn-imagen:active { transform: translateY(.15cqw) scale(.98); }
+.btn-imagen:focus-visible { outline: .4cqw solid #ffe45e; outline-offset: .4cqw; }
+.btn-imagen:disabled { opacity: .45; cursor: not-allowed; }
+
+#btn-comenzar { position: absolute; left: 50%; margin-left: -17cqw; width: 34cqw; bottom: 6cqw; }
+
 .pulsa-tecla { position: absolute; bottom: 3cqw; left: 0; right: 0; margin: 0; text-align: center; font-size: 2.3cqw; animation: parpadeo 1.3s steps(2) infinite; text-shadow: .2cqw .2cqw 0 #1c0a26; }
 @keyframes parpadeo { 50% { opacity: .25; } }
 
-/* ---------- Menú principal ---------- */
+/* Menu principal */
 .menu-botones { position: absolute; left: 2cqw; top: 13cqw; width: 41cqw; display: flex; flex-direction: column; gap: 2.2cqw; }
 .juego .btn-menu { width: 100%; font-size: 3.2cqw; padding: 1.4cqw 2cqw; }
 .juego .btn-menu > span:first-child:not(:only-child) { color: #ffe45e; }
 .menu-pie { position: absolute; left: 1.5cqw; bottom: 1.8cqw; padding: .9cqw 2.4cqw; font-size: 2cqw; }
 .menu-poni { position: absolute; right: 13cqw; bottom: 6cqw; height: 31cqw; width: auto; filter: drop-shadow(0 .6cqw 0 rgba(0, 0, 0, .25)); }
 
-/* ---------- Modos de juego ---------- */
+/* Modos de juego */
 .juego .columns { margin: 0; }
 .juego .column { padding: .9cqw; }
 .modos-lista { position: absolute; left: 3cqw; right: 3cqw; top: 11.5cqw; }
@@ -142,7 +148,7 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 .tarjeta-modo.bloqueado strong { color: #b9a6c9; }
 .btn-continuar-modos { position: absolute; right: 3cqw; bottom: 2.5cqw; font-size: 2.8cqw !important; }
 
-/* ---------- Selección de poni ---------- */
+/* Selección de ponys */
 #pantalla-ponis .encabezado, #pantalla-modos .encabezado { left: 9cqw; transform: none; }
 #pantalla-ponis .encabezado { font-size: 3.3cqw; }
 .ponis-grid { position: absolute; left: 1.5cqw; top: 11cqw; width: 57.5cqw; }
@@ -184,7 +190,7 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 #ponis-confirmar { position: absolute; left: 0; right: 0; bottom: 0; font-size: 2.8cqw !important; padding: .9cqw 1cqw !important; }
 #pantalla-ponis[data-modo="consulta"] #ponis-confirmar { display: none; }
 
-/* ---------- Selección de mejoras ---------- */
+/* Selección de habilidades */
 .cartas-poni { position: absolute; left: 6cqw; top: 6.2cqw; height: 13cqw; }
 .cartas-poni img { height: 100%; width: auto; }
 .chip-cartas { position: absolute; font-size: 2.5cqw; font-weight: 700; padding: .8cqw 3cqw; }
@@ -211,7 +217,7 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 .carta-mejora .descripcion { text-align: center; font-size: 1.6cqw; line-height: 1.2; color: #e5d2f5; padding: .3cqw 1.2cqw 1.2cqw; min-height: 5.4cqw; }
 .cartas-ayuda { position: absolute; left: 3cqw; bottom: 2.6cqw; max-width: 64cqw; font-size: 1.95cqw; padding: 1cqw 2.2cqw; white-space: nowrap; }
 
-/* ---------- Batalla ---------- */
+/* Batalla */
 .hud { position: absolute; top: .8cqw; width: 33cqw; height: 9.8cqw; display: flex; align-items: center; gap: 1.1cqw; padding: .7cqw 1.1cqw; z-index: 2; }
 .hud-a { left: .8cqw; }
 .hud-b { right: 7.4cqw; }
@@ -290,7 +296,7 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 .carta-hab .espera { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(20, 5, 30, .72); border-radius: .6cqw; font-size: 2.1cqw; font-weight: 700; text-align: center; line-height: 1.2; }
 .btn-fin-turno { flex: none; width: 14cqw !important; height: 10cqw !important; font-size: 2.2cqw !important; line-height: 1.15; padding: 0 !important; }
 
-/* ---------- Ventanas (Bulma modal con el tema del juego) ---------- */
+/* Ventanas (modales) */
 .modal { font-family: "Pixelify Sans", "Trebuchet MS", monospace; }
 .modal-background { background: rgba(18, 8, 26, .8); }
 .modal-card { width: min(92vw, 540px); border: 3px solid #d2a8f7; border-radius: 10px; box-shadow: 0 0 0 3px #1c0a26; }
@@ -314,6 +320,78 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 .modal .opcion-poni span { color: #fff2b8; font-weight: 700; font-size: .95rem; }
 .modal .opcion-poni small { display: block; color: #cdb6e0; }
 
-/* ---------- Aviso de giro (teléfonos en vertical) ---------- */
+/* CELULARES = Mensaje de giro */
 .girar { display: none; position: fixed; inset: 0; z-index: 100; background: #12081a; color: #f8ecc0; align-items: center; justify-content: center; text-align: center; font-family: "Pixelify Sans", monospace; font-size: 6vw; line-height: 1.5; padding: 2rem; }
 @media (orientation: portrait) and (max-width: 820px) { .girar { display: flex; } }
+
+.juego {
+  background-color: #2b1a44;             /* color fondo predeterminado */
+  background-image: var(--fondo);
+  background-size: cover;                /* Formato 16:9 */
+  background-position: center;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+}
+.juego[data-pantalla="inicio"][data-momento="dia"] { --fondo: url(../ASSETS/Fondos/01-inicio-dia.png); }
+.juego[data-pantalla="inicio"][data-momento="noche"] { --fondo: url(../ASSETS/Fondos/01-inicio-noche.png); }
+.juego[data-pantalla="menu"][data-momento="dia"] { --fondo: url(../ASSETS/Fondos/02_menu_dia.png); }
+.juego[data-pantalla="menu"][data-momento="noche"] { --fondo: url(../ASSETS/Fondos/02-menu_noche.png); }
+.juego[data-pantalla="modos"][data-momento="dia"] { --fondo: url(../ASSETS/Fondos/03_modos_dia.png); }
+.juego[data-pantalla="modos"][data-momento="noche"] { --fondo: url(../ASSETS/Fondos/03-modos_noche.png); }
+.juego[data-pantalla="personajes"][data-momento="dia"] { --fondo: url(../ASSETS/Fondos/04-personajes_dia.png); }
+.juego[data-pantalla="personajes"][data-momento="noche"] { --fondo: url(../ASSETS/Fondos/04-personajes_noche.png); }
+.juego[data-pantalla="habilidades"][data-momento="dia"] { --fondo: url(../ASSETS/Fondos/05-habilidades_dia.png); }
+.juego[data-pantalla="habilidades"][data-momento="noche"] { --fondo: url(../ASSETS/Fondos/05-habilidades_noche.png); }
+.juego[data-pantalla="batalla"][data-momento="dia"] { --fondo: url(../ASSETS/Fondos/06-batalla_dia.png); }
+.juego[data-pantalla="batalla"][data-momento="noche"] { --fondo: url(../ASSETS/Fondos/06-batalla_noche.png); }
+
+/* Velo de color segun el clima */
+.juego::before { content: ""; position: absolute; inset: 0; pointer-events: none; transition: background .8s; }
+.juego[data-clima="nublado"]::before  { background: rgba(60, 70, 95, .28); }
+.juego[data-clima="lluvia"]::before   { background: rgba(40, 55, 85, .38); }
+.juego[data-clima="tormenta"]::before { background: rgba(20, 25, 50, .52); }
+.juego[data-clima="niebla"]::before   { background: rgba(235, 240, 250, .32); }
+.juego[data-clima="nieve"]::before    { background: rgba(240, 247, 255, 0.5); }
+
+/* INICIO = título animado, chip del clima y botón Ajustes */
+.titulo-juego img {
+  animation: titulo-entrada .9s cubic-bezier(.2, 1.4, .4, 1) both, titulo-flotar 3.8s ease-in-out .9s infinite;
+}
+@keyframes titulo-entrada {
+  from { transform: translateY(-9cqw) scale(.85); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+@keyframes titulo-flotar {
+  0%, 100% { transform: translateY(0) scale(1); filter: drop-shadow(0 .6cqw 0 rgba(0, 0, 0, .25)) brightness(1); }
+  50%      { transform: translateY(-.4cqw) scale(1.015); filter: drop-shadow(0 0.9cqw 0 rgba(0, 0, 0, .18)) brightness(1.1); }
+}
+@media (prefers-reduced-motion: reduce) { .titulo-juego img { animation: none; } }
+
+/* Tamaño chip clima y btn Ajustes */
+.juego[data-pantalla="inicio"] .chip-clima {
+  top: auto; bottom: 1.5cqw; right: 1.5cqw;
+  height: 3.6cqw; padding: 0 1.2cqw; gap: .6cqw; font-size: 1.2cqw; border-radius: .7cqw;
+}
+.juego[data-pantalla="inicio"] .chip-clima .icono { font-size: 1.7cqw; }
+.juego[data-pantalla="inicio"] .chip-clima b { font-size: 1.5cqw; }
+.juego .btn-esquina {
+  position: absolute; left: 1.5cqw; bottom: 1.5cqw; z-index: 6;
+  height: 3.6cqw; padding: 0 1.6cqw; font-size: 1.5cqw; border-radius: .7cqw;
+}
+
+/* MENU = Pony personalizable */
+.juego .btn-cambiar-poni { position: absolute; right: 1.5cqw; bottom: 1.8cqw; padding: .7cqw 2cqw; font-size: 2cqw; }
+.menu-poni.cambio { animation: poni-rebote .55s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes poni-rebote {
+  0%   { transform: scale(.8, 1.15) translateY(-3cqw); opacity: .4; }
+  60%  { transform: scale(1.06, .94); opacity: 1; }
+  100% { transform: none; }
+}
+.modal .opcion-poni.actual { border-color: #ffe45e; }
+
+/* Ajustes extras */
+.luchador { bottom: 21.4cqw; }                          /* los pies quedan sobre la franja de pasto y piedra del fondo de batalla */
+#ponis-sprite { bottom: 1cqw; }                         /* el poni apoya los pies en la plataforma del fondo */
+.menu-botones { width: 37cqw; }                         /* deja ver más la casita del fondo del menú */
+#pantalla-cartas .encabezado { left: 3cqw; transform: none; font-size: 3.3cqw; }
+.cartas-poni { top: 8.2cqw; height: 11.4cqw; }

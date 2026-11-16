@@ -1,9 +1,5 @@
-<!DOCTYPE html>
-<html lang="es" data-theme="light">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My Little Pony: Guardianes de la armonía</title>
+  <title>MLPB - Guardianes de la armonía</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,15 +15,17 @@
 
       <!-- ============ INICIO ============ -->
       <section id="pantalla-inicio" class="pantalla">
-        <h1 class="titulo-juego">MY LITTLE PONY</h1>
-        <p class="subtitulo-juego"><span>★</span> Guardianes de la armonía <span>★</span></p>
+        <h1 class="titulo-juego"><img src="ASSETS/titulo-juego.png" alt="MLP Guardianes de la armonía"></h1>
         <div class="trio">
-          <img src="IMG/ponis/twilight.png" alt="Twilight Sparkle">
-          <img src="IMG/ponis/rainbow-dash.png" alt="Rainbow Dash">
-          <img src="IMG/ponis/pinkie-pie.png" alt="Pinkie Pie" class="volteado">
+          <img src="ASSETS/ponis/twilight.png" alt="Twilight Sparkle">
+          <img src="ASSETS/ponis/rainbow-dash.png" alt="Rainbow Dash">
+          <img src="ASSETS/ponis/pinkie-pie.png" alt="Pinkie Pie" class="volteado">
         </div>
-        <button id="btn-comenzar" class="btn-pix btn-grande btn-dorado" type="button">★ COMENZAR ★</button>
+        <button id="btn-comenzar" class="btn-imagen" type="button">
+          <img src="ASSETS/Componentes/comenzar.png" alt="Comenzar btn">
+        </button>
         <p class="pulsa-tecla">Pulsa cualquier tecla</p>
+        <button id="btn-ajustes-inicio" class="btn-pix btn-esquina" type="button">Ajustes</button>
       </section>
 
       <!-- ============ MENÚ PRINCIPAL ============ -->
@@ -40,7 +38,8 @@
           <button id="menu-ajustes" class="btn-pix btn-menu" type="button">Ajustes</button>
         </nav>
         <div id="menu-pie" class="panel-pix menu-pie"></div>
-        <img class="menu-poni" src="IMG/ponis/twilight.png" alt="Twilight Sparkle">
+        <img id="menu-poni" class="menu-poni" src="ASSETS/ponis/twilight.png" alt="Twilight Sparkle">
+        <button id="menu-cambiar-poni" class="btn-pix btn-cambiar-poni" type="button">🦄 Cambiar poni</button>
       </section>
 
       <!-- ============ MODOS DE JUEGO ============ -->
@@ -57,7 +56,7 @@
           <div class="column is-4">
             <button class="tarjeta-modo" data-modo="duelo" type="button">
               <div class="ilustracion ilu-duelo">
-                <img src="IMG/ponis/twilight.png" alt=""><img src="IMG/ponis/rainbow-dash.png" alt="" class="volteado">
+                <img src="ASSETS/ponis/twilight.png" alt=""><img src="ASSETS/ponis/rainbow-dash.png" alt="" class="volteado">
               </div>
               <div class="texto"><strong>Duelo</strong><small>Batalla local 3 vs 3</small></div>
             </button>

@@ -74,7 +74,7 @@ const Pantallas = {
     $$(".pantalla").forEach((p) => p.classList.toggle("is-hidden", p.id !== "pantalla-" + nombre));
     this.actual = nombre;
     $("#juego").dataset.pantalla = nombre;
-    Escenario.configurar({ decor: nombre === "batalla" ? "bosque" : "campo" });
+    Escenario.configurar({ pantalla: nombre }); // el fondo y las nubes dependen de la pantalla
     if (nombre === "menu") Menu.actualizar();
   }
 };
@@ -100,7 +100,45 @@ const Menu = {
       Array.isArray(p.orden) && p.orden.length === 5 && p.orden.every((id) => PonisPorId[id]);
     return valida ? p : null;
   },
+  // ---- Poni que se muestra en el menú (lo elige el jugador y se guarda en localStorage) ----
+  poniId() {
+    const id = Almacen.leer(Config.claves.poniMenu, "twilight");
+    return PonisPorId[id] && id !== "lobo-madera" ? id : "twilight";
+  },
+  aplicarPoni() {
+    const p = PonisPorId[this.poniId()];
+    const img = $("#menu-poni");
+    if (img.getAttribute("src") !== p.sprite) img.src = p.sprite;
+    img.alt = p.nombre;
+  },
+  fijarPoni(id) {
+    Almacen.guardar(Config.claves.poniMenu, id);
+    this.aplicarPoni();
+    const img = $("#menu-poni");
+    img.classList.remove("cambio");
+    void img.offsetWidth; // reinicia la animación de rebote
+    img.classList.add("cambio");
+  },
+  abrirSelectorPoni() {
+    const actual = this.poniId();
+    const opciones = Ponis.map((p) => `
+      <button class="opcion-poni ${p.id === actual ? "actual" : ""}" type="button" data-id="${p.id}">
+        <img src="${p.retrato}" alt=""><span>${escapar(p.nombre)}</span>
+      </button>`).join("");
+    Modal.mostrar({
+      titulo: "Elige a tu poni del menú",
+      html: `<p class="mb-4">¿Quién te acompaña en el menú principal?</p><div class="equipo-cambio">${opciones}</div>`,
+      botones: [{ texto: "Cerrar", clase: "is-light" }]
+    });
+    $$("#modal-cuerpo .opcion-poni").forEach((boton) => {
+      boton.addEventListener("click", () => {
+        this.fijarPoni(boton.dataset.id);
+        Modal.cerrar(false);
+      });
+    });
+  },
   actualizar() {
+    this.aplicarPoni();
     const partida = this.partidaGuardada();
     $("#menu-continuar-texto").textContent = partida ? `Continuar · Ronda ${partida.ronda}` : "Continuar";
     const record = Almacen.record();
@@ -122,6 +160,7 @@ const Menu = {
     $("#menu-nueva").addEventListener("click", () => Pantallas.mostrar("modos"));
     $("#menu-personajes").addEventListener("click", () => SeleccionPoni.iniciar("consulta"));
     $("#menu-ajustes").addEventListener("click", () => Ajustes.abrir());
+    $("#menu-cambiar-poni").addEventListener("click", () => this.abrirSelectorPoni());
   }
 };
 

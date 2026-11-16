@@ -26,6 +26,7 @@ const Config = {
     ajustes: "mlp_ajustes",
     record: "mlp_record",
     partida: "mlp_partida",
-    ubicacion: "mlp_ubicacion"
+    ubicacion: "mlp_ubicacion",
+    poniMenu: "mlp_poni_menu"   // poni que se muestra en el menú principal
   }
 };
