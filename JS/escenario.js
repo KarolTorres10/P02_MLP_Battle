@@ -1,9 +1,3 @@
-// ===== Escenario: clima y nubes sobre los fondos =====
-// Los paisajes son imágenes (IMG/fondos/<pantalla>-<dia|noche>.png) que se eligen con CSS según
-// los atributos data-pantalla y data-momento de #juego. Este canvas, transparente, dibuja encima:
-//   - nubes que se desplazan (cantidad, color y tamaño según el clima y el momento del día)
-//   - lluvia, nieve, niebla y relámpagos
-// Además marca data-momento y data-clima en #juego, que el CSS usa para elegir el fondo y el velo de color.
 const Escenario = (() => {
   const W = 320, H = 180; // resolución del canvas; el CSS lo escala con "pixelated"
   let canvas, ctx;
@@ -11,8 +5,7 @@ const Escenario = (() => {
   let particulas = [], nubes = [];
   let cuadro = 0, relampago = 0, proximoRelampago = 60, rayo = null;
 
-  // Zona de cielo visible de cada fondo (en píxeles del canvas) y qué tan visibles deben ser las nubes.
-  // En la batalla el cielo casi no se ve (hay copas de árboles), por eso las nubes son pequeñas y tenues.
+  // VISIBILIDAD = Zona de cielo y nubes
   const ZONAS = {
     inicio: { y0: 8, y1: 62, alfa: 1, escala: 1 },
     menu:   { y0: 6, y1: 44, alfa: 1, escala: 1 },
@@ -22,7 +15,7 @@ const Escenario = (() => {
     batalla: { y0: 4, y1: 34, alfa: 0.5, escala: 0.75 }
   };
 
-  // Color de las nubes según momento del día y clima: [nube, sombra]
+  // Color de la nube segun clima [nube, sombra]
   const COLORES_NUBE = {
     dia: {
       despejado: ["#ffffff", "#d3e6f7"], nublado: ["#d5dbe4", "#aab4c4"], niebla: ["#eceff5", "#cfd6e2"],
@@ -34,7 +27,7 @@ const Escenario = (() => {
     }
   };
 
-  // ---------- Elementos ----------
+  // ELEMENTOS
   function crearElementos() {
     const zona = ZONAS[estado.pantalla] || ZONAS.inicio;
     const cantidad = { despejado: 3, niebla: 3, nieve: 6, nublado: 8, lluvia: 9, tormenta: 10 }[estado.categoria] || 3;
@@ -54,7 +47,7 @@ const Escenario = (() => {
     }
   }
 
-  // ---------- Dibujo ----------
+  // DIBUJO
   const rect = (x, y, w, h, color) => { ctx.fillStyle = color; ctx.fillRect(Math.round(x), Math.round(y), w, h); };
 
   function dibujarNubes() {
@@ -119,17 +112,17 @@ const Escenario = (() => {
   }
 
   function dibujar() {
-    ctx.clearRect(0, 0, W, H); // el canvas es transparente: el paisaje es la imagen de fondo
+    ctx.clearRect(0, 0, W, H); // canvas transparente
     dibujarNubes();
     if (estado.categoria === "niebla") niebla();
     if (particulas.length) precipitacion();
     tormenta();
   }
 
-  // ---------- Animación ----------
+  // ANIMACION
   let ultimo = 0;
   function bucle(t) {
-    if (t - ultimo > 90) { // ~11 cuadros por segundo: estilo retro y poco consumo
+    if (t - ultimo > 90) { // 11 fps aprox.
       ultimo = t; cuadro++;
       const zona = ZONAS[estado.pantalla] || ZONAS.inicio;
       nubes.forEach((n) => { n.x += n.v * 3; if (n.x > W + 20) { n.x = -60 * n.s; n.y = zona.y0 + Math.random() * (zona.y1 - zona.y0); } });
@@ -138,13 +131,13 @@ const Escenario = (() => {
     requestAnimationFrame(bucle);
   }
 
-  // nuevo puede traer: esDia, categoria, intensidad (clima) o pantalla
+  // Trae: esDia, categoria, intensidad o pantalla
   function configurar(nuevo) {
     const cambio = ["esDia", "categoria", "intensidad", "pantalla"].some((k) => nuevo[k] !== undefined && nuevo[k] !== estado[k]);
     estado = { ...estado, ...nuevo };
     const juego = document.getElementById("juego");
-    juego.dataset.momento = estado.esDia ? "dia" : "noche"; // el CSS elige la imagen de fondo con esto
-    juego.dataset.clima = estado.categoria;                  // y el velo de color según el clima
+    juego.dataset.momento = estado.esDia ? "dia" : "noche"; // indica al CSS que fondo usar
+    juego.dataset.clima = estado.categoria;                  // indica el velo segun clima
     if (cambio || !nubes.length) crearElementos();
     if (ctx) dibujar();
   }

@@ -1,13 +1,13 @@
-// ===== Hora y clima en tiempo real con Open-Meteo =====
-// API (gratuita, sin clave): https://open-meteo.com/en/docs
-// Pedimos "current" = temperatura, código del clima (WMO) e is_day (1 = día, 0 = noche).
+// HORA Y CLIMA (Open-Meteo)
+// API: https://open-meteo.com/en/docs
+// "current" = temperatura, código del clima (WMO) e is_day (1 = día, 0 = noche).
 const Clima = (() => {
   const ETIQUETAS = {
     despejado: "Despejado", nublado: "Nublado", niebla: "Niebla",
     lluvia: "Lluvia", nieve: "Nieve", tormenta: "Tormenta"
   };
 
-  // Códigos WMO -> categoría del escenario
+  // Códigos WMO = categoría del escenario
   function categoriaDesdeCodigo(codigo) {
     if (codigo === 0 || codigo === 1) return "despejado";
     if (codigo === 2 || codigo === 3) return "nublado";
@@ -18,14 +18,14 @@ const Clima = (() => {
     return "despejado";
   }
 
-  // 1 = ligera, 2 = moderada, 3 = fuerte (controla cuántas gotas o copos se dibujan)
+  // 1 = ligera, 2 = moderada, 3 = fuerte (control de gotas y copos)
   function intensidadDesdeCodigo(codigo) {
     if ([51, 56, 61, 71, 77, 80, 85].includes(codigo)) return 1;
     if ([55, 57, 65, 67, 75, 82, 86, 99].includes(codigo)) return 3;
     return 2;
   }
 
-  // Si no hay internet: se estima día/noche con la hora del dispositivo
+  // captura asincronica de dia/noche segun hora del dispositivo
   const esDiaPorHora = (fecha = new Date()) => fecha.getHours() >= 7 && fecha.getHours() < 19;
 
   let auto = {
@@ -33,12 +33,12 @@ const Clima = (() => {
     temperatura: null, zona: null, fuente: "estimado", codigo: null
   };
   let ajustes = Object.assign(
-    { manual: false, esDia: true, categoria: "despejado" },
+    { manual: false, esDia: true, categoria: "despejado"},
     Almacen.leer(Config.claves.ajustes, {})
   );
   const oyentes = new Set();
 
-  // Estado que usa el juego: el real (Open-Meteo) o el manual de Ajustes
+  // ESTADO A USAR: (Open-Meteo) o manual desde ajustes
   function actual() {
     if (ajustes.manual) {
       return { esDia: ajustes.esDia, categoria: ajustes.categoria, intensidad: 2, temperatura: null, zona: auto.zona, fuente: "manual" };
@@ -47,7 +47,7 @@ const Clima = (() => {
   }
   const emitir = () => oyentes.forEach((fn) => fn(actual()));
 
-  // Hora local del lugar del clima (HH:MM)
+  // Hora local (HH:MM)
   function horaTexto() {
     const opciones = { hour: "2-digit", minute: "2-digit", hour12: false };
     try {
@@ -57,14 +57,14 @@ const Clima = (() => {
     }
   }
 
-  // Ubicación: la guardada (24 h), la del navegador o la predeterminada
+  // Ubicacion
   function obtenerUbicacion() {
     const guardada = Almacen.leer(Config.claves.ubicacion);
     if (guardada && Date.now() - guardada.t < 24 * 60 * 60 * 1000) return Promise.resolve(guardada);
     return new Promise((resolve) => {
       const respaldo = () => resolve({ ...Config.ubicacionPorDefecto });
       if (!navigator.geolocation) return respaldo();
-      const limite = setTimeout(respaldo, 6000); // por si nadie responde al permiso
+      const limite = setTimeout(respaldo, 6000); // no obtiene permiso
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           clearTimeout(limite);
@@ -107,7 +107,7 @@ const Clima = (() => {
     try {
       await consultar(await obtenerUbicacion());
     } catch {
-      // Sin conexión o sin respuesta: se conserva el último clima y se estima la hora
+      // ASINCRONICO = Se conserva el ultimo clima registrado y se estima la hora
       auto = { ...auto, esDia: esDiaPorHora(), fuente: "estimado", temperatura: null };
     }
     emitir();

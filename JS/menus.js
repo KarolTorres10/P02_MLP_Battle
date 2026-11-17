@@ -67,7 +67,7 @@ const Modal = {
   }
 };
 
-// ---------- Cambio de pantalla ----------
+// Cambio de pantalla
 const Pantallas = {
   actual: "inicio",
   mostrar(nombre) {
@@ -91,7 +91,7 @@ const ChipClima = {
   }
 };
 
-// ---------- Menú principal ----------
+// Menú principal
 const Menu = {
   // Una partida guardada solo sirve si sus datos son coherentes
   partidaGuardada() {

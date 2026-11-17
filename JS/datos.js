@@ -1,16 +1,8 @@
-// ===== Datos del juego (ponis, habilidades, mejoras) =====
-// Habilidad: { id, nombre, icono, costo, tipo, base, enfriamiento, extra? }
-//   tipo:  daño | escudo | cura | energia | potenciar | debilitar
-//   base:  valor base. El valor final depende de las estadísticas del poni (ver motor.js)
-//   enfriamiento: turnos propios que hay que esperar para volver a usarla (0 = sin espera)
-//   extra: efecto adicional opcional ("debilitar")
-// Estadísticas (1 a 6): vida -> vida máx. = 20 + 5 x vida | magia -> potencia daño y curación | defensa -> escudo
-
 const Ponis = [
   {
     id: "twilight", nombre: "Twilight Sparkle", tipo: "Magia",
     vida: 4, magia: 5, defensa: 3,
-    sprite: "IMG/ponis/twilight.png", retrato: "IMG/retratos/twilight.png", mira: "derecha",
+    sprite: "ASSETS/ponis/twilight.png", retrato: "ASSETS/retratos/twilight.png", mira: "derecha",
     habilidades: [
       { id: "chispa",  nombre: "Chispa mágica",     icono: "✨", costo: 1, tipo: "daño",   base: 9,  enfriamiento: 0, precision: 100, pp: 25},
       { id: "escudo",  nombre: "Escudo de amistad", icono: "🛡️", costo: 1, tipo: "escudo", base: 4,  enfriamiento: 0, precision: 100, pp: 10},
@@ -22,7 +14,7 @@ const Ponis = [
   {
     id: "rainbow-dash", nombre: "Rainbow Dash", tipo: "Velocidad",
     vida: 3, magia: 6, defensa: 1,
-    sprite: "IMG/ponis/rainbow-dash.png", retrato: "IMG/retratos/rainbow-dash.png", mira: "derecha",
+    sprite: "ASSETS/ponis/rainbow-dash.png", retrato: "ASSETS/retratos/rainbow-dash.png", mira: "derecha",
     habilidades: [
       { id: "estela",    nombre: "Estela veloz",    icono: "💨", costo: 1, tipo: "daño",   base: 9,  enfriamiento: 0, precision: 100, pp: 25},
       { id: "giro",      nombre: "Giro defensivo",  icono: "🌀", costo: 1, tipo: "escudo", base: 5,  enfriamiento: 0, precision: 100, pp: 10},
@@ -34,7 +26,7 @@ const Ponis = [
   {
     id: "fluttershy", nombre: "Fluttershy", tipo: "Naturaleza",
     vida: 5, magia: 2, defensa: 4,
-    sprite: "IMG/ponis/fluttershy.png", retrato: "IMG/retratos/fluttershy.png", mira: "derecha",
+    sprite: "ASSETS/ponis/fluttershy.png", retrato: "ASSETS/retratos/fluttershy.png", mira: "derecha",
     habilidades: [
       { id: "ternura",  nombre: "Rayo de ternura",   icono: "🌸", costo: 1, tipo: "daño",   base: 9,  enfriamiento: 0, precision: 100, pp: 25},
       { id: "alas",     nombre: "Alas protectoras",  icono: "🪽", costo: 1, tipo: "escudo", base: 4,  enfriamiento: 0, precision: 100, pp: 10},
@@ -46,7 +38,7 @@ const Ponis = [
   {
     id: "pinkie-pie", nombre: "Pinkie Pie", tipo: "Fiesta",
     vida: 6, magia: 3, defensa: 3,
-    sprite: "IMG/ponis/pinkie-pie.png", retrato: "IMG/retratos/pinkie-pie.png", mira: "derecha",
+    sprite: "ASSETS/ponis/pinkie-pie.png", retrato: "ASSETS/retratos/pinkie-pie.png", mira: "derecha",
     habilidades: [
       { id: "globo",    nombre: "Globo explosivo",   icono: "🎈", costo: 1, tipo: "daño",   base: 9,  enfriamiento: 0, precision: 100, pp: 25},
       { id: "confeti",  nombre: "Confeti protector", icono: "🎊", costo: 1, tipo: "escudo", base: 3,  enfriamiento: 0, precision: 100, pp: 8},
@@ -58,7 +50,7 @@ const Ponis = [
   {
     id: "rarity", nombre: "Rarity", tipo: "Cristal",
     vida: 3, magia: 5, defensa: 5,
-    sprite: "IMG/ponis/rarity.png", retrato: "IMG/retratos/rarity.png", mira: "derecha",
+    sprite: "ASSETS/ponis/rarity.png", retrato: "ASSETS/retratos/rarity.png", mira: "derecha",
     habilidades: [
       { id: "gema",     nombre: "Gema afilada",      icono: "💎", costo: 1, tipo: "daño",   base: 9,  enfriamiento: 0, precision: 100, pp: 25},
       { id: "barrera",  nombre: "Barrera de cristal", icono: "🔷", costo: 1, tipo: "escudo", base: 6,  enfriamiento: 0, precision: 100, pp: 10},
@@ -70,7 +62,7 @@ const Ponis = [
   {
     id: "applejack", nombre: "Applejack", tipo: "Fuerza",
     vida: 6, magia: 2, defensa: 4,
-    sprite: "IMG/ponis/applejack.png", retrato: "IMG/retratos/applejack.png", mira: "derecha",
+    sprite: "ASSETS/ponis/applejack.png", retrato: "ASSETS/retratos/applejack.png", mira: "derecha",
     habilidades: [
       { id: "coz",      nombre: "Coz de manzano",    icono: "🍎", costo: 1, tipo: "daño",   base: 10,  enfriamiento: 0, precision: 100, pp: 25},
       { id: "postura",  nombre: "Postura firme",     icono: "🪵", costo: 1, tipo: "escudo", base: 2,  enfriamiento: 0, precision: 100, pp: 10},
@@ -85,7 +77,7 @@ const Ponis = [
 const Lobo = {
   id: "lobo-madera", nombre: "Lobo de madera", tipo: "Bestia",
   vida: 6, magia: 3, defensa: 1,
-  sprite: "IMG/ponis/lobo-madera.png", retrato: "IMG/retratos/lobo-madera.png", mira: "izquierda",
+  sprite: "ASSETS/ponis/lobo-madera.png", retrato: "ASSETS/retratos/lobo-madera.png", mira: "izquierda",
   habilidades: [
     { id: "zarpazo",  nombre: "Zarpazo",           icono: "🐾", costo: 1, tipo: "daño",   base: 9,  enfriamiento: 0 },
     { id: "corteza",  nombre: "Corteza",           icono: "🪵", costo: 1, tipo: "escudo", base: 3,  enfriamiento: 0 },

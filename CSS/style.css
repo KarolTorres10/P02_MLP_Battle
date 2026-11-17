@@ -332,21 +332,21 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
   background-repeat: no-repeat;
   image-rendering: pixelated;
 }
-.juego[data-pantalla="inicio"][data-momento="dia"] { --fondo: url(../ASSETS/Fondos/01-inicio-dia.png); }
-.juego[data-pantalla="inicio"][data-momento="noche"] { --fondo: url(../ASSETS/Fondos/01-inicio-noche.png); }
-.juego[data-pantalla="menu"][data-momento="dia"] { --fondo: url(../ASSETS/Fondos/02_menu_dia.png); }
-.juego[data-pantalla="menu"][data-momento="noche"] { --fondo: url(../ASSETS/Fondos/02-menu_noche.png); }
-.juego[data-pantalla="modos"][data-momento="dia"] { --fondo: url(../ASSETS/Fondos/03_modos_dia.png); }
-.juego[data-pantalla="modos"][data-momento="noche"] { --fondo: url(../ASSETS/Fondos/03-modos_noche.png); }
-.juego[data-pantalla="personajes"][data-momento="dia"] { --fondo: url(../ASSETS/Fondos/04-personajes_dia.png); }
-.juego[data-pantalla="personajes"][data-momento="noche"] { --fondo: url(../ASSETS/Fondos/04-personajes_noche.png); }
-.juego[data-pantalla="habilidades"][data-momento="dia"] { --fondo: url(../ASSETS/Fondos/05-habilidades_dia.png); }
-.juego[data-pantalla="habilidades"][data-momento="noche"] { --fondo: url(../ASSETS/Fondos/05-habilidades_noche.png); }
-.juego[data-pantalla="batalla"][data-momento="dia"] { --fondo: url(../ASSETS/Fondos/06-batalla_dia.png); }
-.juego[data-pantalla="batalla"][data-momento="noche"] { --fondo: url(../ASSETS/Fondos/06-batalla_noche.png); }
+.juego[data-pantalla="inicio"][data-momento="dia"] { --fondo: url(../ASSETS/Fondos/01-inicio-dia.png);}
+.juego[data-pantalla="inicio"][data-momento="noche"] { --fondo: url(../ASSETS/Fondos/01-inicio-noche.png);}
+.juego[data-pantalla="menu"][data-momento="dia"] { --fondo: url(../ASSETS/Fondos/02_menu_dia.png);}
+.juego[data-pantalla="menu"][data-momento="noche"] { --fondo: url(../ASSETS/Fondos/02-menu_noche.png);}
+.juego[data-pantalla="modos"][data-momento="dia"] { --fondo: url(../ASSETS/Fondos/03_modos_dia.png);}
+.juego[data-pantalla="modos"][data-momento="noche"] { --fondo: url(../ASSETS/Fondos/03-modos_noche.png);}
+.juego[data-pantalla="ponis"][data-momento="dia"] { --fondo: url(../ASSETS/Fondos/04-personajes_dia.png);}
+.juego[data-pantalla="ponis"][data-momento="noche"] { --fondo: url(../ASSETS/Fondos/04-personajes_noche.png);}
+.juego[data-pantalla="cartas"][data-momento="dia"] { --fondo: url(../ASSETS/Fondos/05-habilidades_dia.png);}
+.juego[data-pantalla="cartas"][data-momento="noche"] { --fondo: url(../ASSETS/Fondos/05-habilidades_noche.png);}
+.juego[data-pantalla="batalla"][data-momento="dia"] { --fondo: url(../ASSETS/Fondos/06-batalla_dia.png);}
+.juego[data-pantalla="batalla"][data-momento="noche"] { --fondo: url(../ASSETS/Fondos/06-batalla_noche.png);}
 
 /* Velo de color segun el clima */
-.juego::before { content: ""; position: absolute; inset: 0; pointer-events: none; transition: background .8s; }
+.juego::before { content: ""; position: absolute; inset: 0; pointer-events: none; transition: background .8s;}
 .juego[data-clima="nublado"]::before  { background: rgba(60, 70, 95, .28); }
 .juego[data-clima="lluvia"]::before   { background: rgba(40, 55, 85, .38); }
 .juego[data-clima="tormenta"]::before { background: rgba(20, 25, 50, .52); }
@@ -390,8 +390,8 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 .modal .opcion-poni.actual { border-color: #ffe45e; }
 
 /* Ajustes extras */
-.luchador { bottom: 21.4cqw; }                          /* los pies quedan sobre la franja de pasto y piedra del fondo de batalla */
-#ponis-sprite { bottom: 1cqw; }                         /* el poni apoya los pies en la plataforma del fondo */
-.menu-botones { width: 37cqw; }                         /* deja ver más la casita del fondo del menú */
+.luchador { bottom: 21.4cqw; }                          /* FONDO BATALLA: Posicion de ponys */
+#ponis-sprite { bottom: 1cqw; }                         /* Pies sobre plataforma */
+.menu-botones { width: 37cqw; }                         /* vista casita de fondo */
 #pantalla-cartas .encabezado { left: 3cqw; transform: none; font-size: 3.3cqw; }
 .cartas-poni { top: 8.2cqw; height: 11.4cqw; }
