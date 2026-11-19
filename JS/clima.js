@@ -1,4 +1,3 @@
-// HORA Y CLIMA (Open-Meteo)
 // API: https://open-meteo.com/en/docs
 // "current" = temperatura, código del clima (WMO) e is_day (1 = día, 0 = noche).
 const Clima = (() => {

@@ -111,8 +111,8 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 @keyframes parpadeo { 50% { opacity: .25; } }
 
 /* Menu principal */
-.menu-botones { position: absolute; left: 2cqw; top: 13cqw; width: 41cqw; display: flex; flex-direction: column; gap: 2.2cqw; }
-.juego .btn-menu { width: 100%; font-size: 3.2cqw; padding: 1.4cqw 2cqw; }
+.menu-botones { position: absolute; left: 2cqw; top: 13cqw; width: 41cqw; display: flex; flex-direction: column; gap: 1.5cqw; }
+.juego .btn-menu { width: 100%; font-size: 2.8cqw; padding: 1cqw 2cqw; }
 .juego .btn-menu > span:first-child:not(:only-child) { color: #ffe45e; }
 .menu-pie { position: absolute; left: 1.5cqw; bottom: 1.8cqw; padding: .9cqw 2.4cqw; font-size: 2cqw; }
 .menu-poni { position: absolute; right: 13cqw; bottom: 6cqw; height: 31cqw; width: auto; filter: drop-shadow(0 .6cqw 0 rgba(0, 0, 0, .25)); }

@@ -27,11 +27,32 @@
   setInterval(ChipClima.actualizar, 15000); // el reloj del chip avanza solo
   Clima.iniciar();
 
+  // --- CONTROL DE MÚSICA DE FONDO ---
+  const audioEl = document.getElementById("musica-fondo");
+  if (audioEl) {
+    audioEl.volume = 0.3; // Volumen inicial al 30%
+  }
+
+  const btnMusica = document.getElementById("menu-musica");
+  const txtEstadoMusica = document.getElementById("estado-musica");
+  if (btnMusica && audioEl) {
+    btnMusica.addEventListener("click", () => {
+      audioEl.muted = !audioEl.muted;
+      txtEstadoMusica.textContent = audioEl.muted ? "OFF" : "ON";
+    });
+  }
+
   // Pantalla de inicio: botón COMENZAR o cualquier tecla (menos las de navegación o modificadoras)
   const TECLAS_IGNORADAS = ["Tab", "Shift", "Control", "Alt", "Meta", "CapsLock", "Escape"];
   const entrar = (e) => {
     if (Pantallas.actual !== "inicio" || Modal.abierto()) return;
     if (e.type === "keydown" && (TECLAS_IGNORADAS.includes(e.key) || e.target.closest?.("#btn-ajustes-inicio"))) return;
+
+    // Reproducir audio al interactuar por primera vez para cumplir con las políticas del navegador
+    if (audioEl && audioEl.paused) {
+      audioEl.play().catch((err) => console.log("Audio bloqueado temporalmente:", err));
+    }
+
     Pantallas.mostrar("menu");
   };
   $("#btn-comenzar").addEventListener("click", entrar);

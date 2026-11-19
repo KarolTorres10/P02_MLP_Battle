@@ -9,6 +9,18 @@
 <body>
   <div id="marco">
     <main id="juego" class="juego" data-pantalla="inicio">
+
+      <!-- Audio global 
+       <audio id="musica-fondo" loop preload="auto">
+        <source src="ASSETS/Audio/EXTASIS - @ELMILLONARIOBM FT @elcarteldesantatv (Audio Oficial).mp3" type="audio/mpeg">
+       </audio>-->
+
+
+       <!-- Reproductor de audio global -->
+      <audio id="musica-fondo" loop preload="auto">
+        <source src="ASSETS/Audio/EXTASIS - @ELMILLONARIOBM FT @elcarteldesantatv (Audio Oficial).mp3" type="audio/mp3">
+      </audio>
+
       <canvas id="escenario" class="escenario"></canvas>
       <div id="chip-clima" class="chip-clima panel-pix" title="Hora y clima en tiempo real (Open-Meteo)"></div>
       <div id="aviso" class="aviso panel-pix is-hidden" role="status"></div>
@@ -30,11 +42,13 @@
 
       <!-- MENU PRINCIPAL -->
       <section id="pantalla-menu" class="pantalla is-hidden">
-        <div class="encabezado panel-pix izq"><span>★</span> MENÚ PRINCIPAL <span>★</span></div>
+        <button class="btn-pix btn-atras" id="modos-atras" type="button" aria-label="Volver">←</button>
+        <h1 class="encabezado izq"><img src="ASSETS/Componentes/menu-principal.png" alt="Menu principal"></h1>
         <nav class="menu-botones">
           <button id="menu-continuar" class="btn-pix btn-menu btn-dorado" type="button"><span>★</span><span id="menu-continuar-texto">Continuar</span></button>
           <button id="menu-nueva" class="btn-pix btn-menu" type="button">Nueva aventura</button>
           <button id="menu-personajes" class="btn-pix btn-menu" type="button">Personajes</button>
+          <button id="menu-musica" class="btn-pix btn-menu" type="button">🎵 Música: <span id="estado-musica">ON</span></button>
           <button id="menu-ajustes" class="btn-pix btn-menu" type="button">Ajustes</button>
         </nav>
         <div id="menu-pie" class="panel-pix menu-pie"></div>
