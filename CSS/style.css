@@ -58,7 +58,7 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 .encabezado > span:not([id]) { color: #ffe45e; }
 .encabezado.izq { left: 1.5cqw; transform: none; }
 
-.btn-atras { position: absolute; top: 1.3cqw; left: 1.3cqw; width: 6cqw; height: 5.6cqw; padding: 0 !important; font-size: 3.4cqw !important; z-index: 3; }
+.btn-atras { position: absolute; top: 1.3cqw; left: 0.5cqw; width: 6cqw; height: 5.6cqw; padding: 0 !important; font-size: 3.4cqw !important; z-index: 3; }
 
 .chip-clima {
   position: absolute; top: 1.2cqw; right: 1.2cqw; z-index: 6;
@@ -67,7 +67,8 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 }
 .chip-clima .icono { font-size: 2.2cqw; }
 .chip-clima b { font-size: 1.9cqw; }
-.juego[data-pantalla="batalla"] .chip-clima { top: 11.6cqw; left: 50%; right: auto; transform: translateX(-50%); }
+/* Sin chip del clima en selección, mejoras y batalla (el clima se cambia desde Ajustes o la pausa) */
+.juego[data-pantalla="ponis"] .chip-clima, .juego[data-pantalla="cartas"] .chip-clima, .juego[data-pantalla="batalla"] .chip-clima { display: none; }
 .juego[data-pantalla="menu"] .chip-clima { top: 1.2cqw; }
 
 /* INICIO = chip clima */
@@ -148,7 +149,7 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 .tarjeta-modo.bloqueado strong { color: #b9a6c9; }
 .btn-continuar-modos { position: absolute; right: 3cqw; bottom: 2.5cqw; font-size: 2.8cqw !important; }
 
-/* Selección de ponys */
+/* Selección de ponis */
 #pantalla-ponis .encabezado, #pantalla-modos .encabezado { left: 9cqw; transform: none; }
 #pantalla-ponis .encabezado { font-size: 3.3cqw; }
 .ponis-grid { position: absolute; left: 1.5cqw; top: 11cqw; width: 57.5cqw; }
@@ -220,7 +221,7 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 /* Batalla */
 .hud { position: absolute; top: .8cqw; width: 33cqw; height: 9.8cqw; display: flex; align-items: center; gap: 1.1cqw; padding: .7cqw 1.1cqw; z-index: 2; }
 .hud-a { left: .8cqw; }
-.hud-b { right: 7.4cqw; }
+.hud-b { right: 7.2cqw; }
 .juego[data-modo="duelo"] .hud { height: 13.4cqw; }
 .hud-retrato { flex: none; width: 7.4cqw; height: 7.4cqw; border-radius: .6cqw; background: #2a1233; border: .25cqw solid #7a4a8e; overflow: hidden; }
 .hud-retrato img { width: 100%; height: 100%; object-fit: contain; }
@@ -243,8 +244,8 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 .mini.cambiable { cursor: pointer; }
 .mini.cambiable:hover { border-color: #ffffff; transform: translateY(-.2cqw); }
 
-.banner { position: absolute; top: 1.4cqw; left: 50%; margin-left: -9.5cqw; width: 19cqw; padding: 1.1cqw 0; text-align: center; font-size: 2.4cqw; font-weight: 700; z-index: 2; }
-.banner.rival { border-color: #ff9d9d; color: #ffd6d6; }
+.banner { position: absolute; top: 9.6cqw; left: 47%; margin-left: -9.5cqw; width: 19cqw; padding: 1.1cqw 0; text-align: center; font-size: 2.4cqw; font-weight: 700; z-index: 2; }
+.banner.rival { border-color: #fb4a4a; color: #fea9a9; }
 .btn-pausa { position: absolute; top: .8cqw; right: .8cqw; width: 5.4cqw; height: 5.4cqw; padding: 0 !important; font-size: 2cqw !important; z-index: 2; }
 
 .campo { position: absolute; inset: 0; pointer-events: none; }
@@ -273,7 +274,11 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 .flotante.energia, .flotante.estado { color: #ffe45e; font-size: 2.6cqw; }
 @keyframes subir { from { transform: translate(-50%, 0); opacity: 1; } 70% { opacity: 1; } to { transform: translate(-50%, -9cqw); opacity: 0; } }
 .proyectil { position: absolute; top: 28cqw; font-size: 5cqw; transform: translate(-50%, -50%); transition: left .4s linear; }
-.anuncio { position: absolute; left: 50%; top: 16cqw; transform: translateX(-50%); padding: .8cqw 3cqw; font-size: 2.4cqw; font-weight: 700; white-space: nowrap; }
+/* Caja de mensajes de la batalla */
+.anuncio { position: absolute; left: 47.3%; top: 1.2cqw; width: 24cqw; height: 9cqw; margin-left: -12.5cqw; padding: .6cqw 1cqw; font-size: 1.3cqw; line-height: 1.25; text-align: center;
+  display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; } /* tamaño fijo */
+.anuncio div { opacity: .55; }
+.anuncio div:last-child { opacity: 1; font-weight: 700; }
 
 .panel-inferior { position: absolute; left: .8cqw; right: .8cqw; bottom: .8cqw; height: 18.6cqw; display: flex; align-items: center; gap: 1.4cqw; padding: 1.2cqw 1.6cqw; z-index: 2; }
 .energia { flex: none; width: 11cqw; display: flex; flex-direction: column; align-items: center; gap: .6cqw; font-size: 1.9cqw; font-weight: 700; }
@@ -288,13 +293,18 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 .carta-hab:hover:not(.no-usable) { transform: translateY(-.9cqw); border-color: #ffe45e; }
 .carta-hab .cabecera { display: flex; align-items: center; gap: .5cqw; padding: .5cqw .5cqw 0; min-height: 4.4cqw; }
 .carta-hab .costo { flex: none; width: 3cqw; height: 3cqw; border-radius: 50%; display: grid; place-items: center; background: #c9a3f0; color: #3a1840; font-weight: 700; font-size: 1.8cqw; border: .2cqw solid #f0dcff; }
-.carta-hab .nombre-hab { font-size: 1.35cqw; font-weight: 700; line-height: 1.1; color: #fff2b8; }
+.carta-hab .nombre-hab { font-size: 1.35cqw; font-weight: 700; line-height: 1.1; color: #fff2b8; padding-right: .7cqw; }
 .carta-hab .icono-hab { flex: 1; display: grid; place-items: center; font-size: 5.2cqw; }
-.carta-hab .efecto-hab { text-align: center; font-size: 1.45cqw; padding: 0 .3cqw .8cqw; color: #fff2b8; line-height: 1.1; }
-.carta-hab .tecla { position: absolute; bottom: .1cqw; right: .5cqw; font-size: 1.1cqw; color: #9a7bb0; }
+.carta-hab .efecto-hab { text-align: center; font-size: 1.45cqw; padding: 0 .3cqw .2cqw; color: #fff2b8; line-height: 1.1; }
+.carta-hab .pp-hab { display: flex; justify-content: space-between; white-space: nowrap; padding: 0 .7cqw .6cqw; font-size: 1cqw; color: #cdb6e0; }
+.carta-hab .pp-hab.agotado { color: #ff8a8a; }
+.carta-hab .tecla { position: absolute; top: .3cqw; right: .5cqw; font-size: 1.1cqw; color: #9a7bb0; }
 .carta-hab.no-usable { opacity: .45; filter: grayscale(.6); cursor: not-allowed; }
 .carta-hab .espera { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(20, 5, 30, .72); border-radius: .6cqw; font-size: 2.1cqw; font-weight: 700; text-align: center; line-height: 1.2; }
-.btn-fin-turno { flex: none; width: 14cqw !important; height: 10cqw !important; font-size: 2.2cqw !important; line-height: 1.15; padding: 0 !important; }
+/* Botones de accion a la derecha de habilidades */
+.acciones { flex: none; align-self: stretch; width: 14.5cqw; display: flex; flex-direction: column; gap: .7cqw; }
+.acciones .btn-pix { flex: 1; min-height: 0; width: 100%; padding: 0 !important; font-size: 1.45cqw !important; }
+.juego[data-modo="desafio"] #btn-cambiar { display: none; }
 
 /* Ventanas (modales) */
 .modal { font-family: "Pixelify Sans", "Trebuchet MS", monospace; }

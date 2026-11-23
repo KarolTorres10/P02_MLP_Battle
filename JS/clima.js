@@ -46,7 +46,7 @@ const Clima = (() => {
   }
   const emitir = () => oyentes.forEach((fn) => fn(actual()));
 
-  // Hora local (HH:MM)
+  // Hora local
   function horaTexto() {
     const opciones = { hour: "2-digit", minute: "2-digit", hour12: false };
     try {

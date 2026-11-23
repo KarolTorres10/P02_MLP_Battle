@@ -1,5 +1,5 @@
 const Escenario = (() => {
-  const W = 320, H = 180; // resolución del canvas; el CSS lo escala con "pixelated"
+  const W = 320, H = 180; // resolución del canvas; CSS lo escala con "pixelated"
   let canvas, ctx;
   let estado = { esDia: true, categoria: "despejado", intensidad: 2, pantalla: "inicio" };
   let particulas = [], nubes = [];

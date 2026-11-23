@@ -1,5 +1,6 @@
-// ===== Pantallas y menús =====
-// Inicio, menú principal, modos de juego, selección de poni, selección de mejoras,
+// PANTALLAS Y MENUS
+
+// Inicio, menú principal, modos de juego, seleccion de poni, selección de mejoras,
 // flujo del modo Desafío, ajustes y la ventana emergente reutilizable.
 
 const $ = (selector, raiz = document) => raiz.querySelector(selector);
@@ -8,7 +9,7 @@ const esperar = (ms) => new Promise((resolver) => setTimeout(resolver, ms));
 const escapar = (texto) =>
   String(texto).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-// ---------- Aviso breve dentro del juego ----------
+// AVISO breve dentro del juego
 const Aviso = {
   temporizador: null,
   mostrar(texto, ms = 2400) {
@@ -20,7 +21,7 @@ const Aviso = {
   }
 };
 
-// ---------- Ventana emergente (modal de Bulma) ----------
+// VENTANA EMERGENTE (modal de Bulma)
 const Modal = {
   cerrable: true,
   alCerrar: null,
@@ -50,7 +51,7 @@ const Modal = {
     const primero = pie.querySelector("button");
     if (primero) primero.focus();
   },
-  // ejecutarAlCerrar = false cuando se cierra con un botón de la propia ventana
+  // ejecutarAlCerrar = false cuando se cierra con un boton de la propia ventana
   cerrar(ejecutarAlCerrar = true) {
     $("#modal").classList.remove("is-active");
     const fn = this.alCerrar;
@@ -67,7 +68,7 @@ const Modal = {
   }
 };
 
-// Cambio de pantalla
+// CAMBIO DE PANTALLA
 const Pantallas = {
   actual: "inicio",
   mostrar(nombre) {
@@ -79,7 +80,7 @@ const Pantallas = {
   }
 };
 
-// ---------- Chip de hora y clima ----------
+// CHIP DE HORA Y CLIMA
 const ChipClima = {
   actualizar() {
     const e = Clima.actual();
@@ -91,7 +92,7 @@ const ChipClima = {
   }
 };
 
-// Menú principal
+// MENU PRINCIPAL
 const Menu = {
   // Una partida guardada solo sirve si sus datos son coherentes
   partidaGuardada() {
@@ -100,7 +101,7 @@ const Menu = {
       Array.isArray(p.orden) && p.orden.length === 5 && p.orden.every((id) => PonisPorId[id]);
     return valida ? p : null;
   },
-  // ---- Poni que se muestra en el menú (lo elige el jugador y se guarda en localStorage) ----
+  // Poni en pantalla menu (lo elige el jugador y se guarda en localStorage)
   poniId() {
     const id = Almacen.leer(Config.claves.poniMenu, "twilight");
     return PonisPorId[id] && id !== "lobo-madera" ? id : "twilight";
@@ -161,10 +162,11 @@ const Menu = {
     $("#menu-personajes").addEventListener("click", () => SeleccionPoni.iniciar("consulta"));
     $("#menu-ajustes").addEventListener("click", () => Ajustes.abrir());
     $("#menu-cambiar-poni").addEventListener("click", () => this.abrirSelectorPoni());
+    $("#menu-atras").addEventListener("click", () => Pantallas.mostrar("inicio"));
   }
 };
 
-// ---------- Modos de juego ----------
+// MODOS DE JUEGO
 const Modos = {
   seleccionado: "duelo",
   marcar(modo) {
@@ -185,13 +187,13 @@ const Modos = {
         }
       });
     });
-    $("#modos-atras").addEventListener("click", () => Pantallas.mostrar("menu"));
     $("#modos-continuar").addEventListener("click", () => SeleccionPoni.iniciar(this.seleccionado));
+    $("#modos-atras").addEventListener("click", () => Pantallas.mostrar("menu"));
     this.marcar("duelo");
   }
 };
 
-// ---------- Selección de poni (Desafío: 1 · Duelo: 3 por jugador · Consulta: solo ver) ----------
+// SELECCION DE PONI
 const SeleccionPoni = {
   modo: null,
   jugador: 1,
@@ -233,7 +235,7 @@ const SeleccionPoni = {
   },
 
   actualizar() {
-    const titulos = { desafio: "ELIGE TU PONI", consulta: "PERSONAJES", duelo: `JUGADOR ${this.jugador}: ELIGE ${Config.tamanoEquipoDuelo} PONIS` };
+    const titulos = { desafio: "ELIGE TU PONI", consulta: "PERSONAJES", duelo: `JUGADOR ${this.jugador}: ELIGE 1 A ${Config.tamanoEquipoDuelo} PONIS` };
     $("#ponis-titulo").textContent = titulos[this.modo];
 
     const elegidos = this.elegidos();
@@ -273,7 +275,7 @@ const SeleccionPoni = {
 
     const confirmar = $("#ponis-confirmar");
     if (this.modo === "duelo") {
-      confirmar.disabled = elegidos.length !== Config.tamanoEquipoDuelo;
+      confirmar.disabled = elegidos.length < 1; // se puede desde un poni hasta tres
       confirmar.textContent = `★ CONFIRMAR (${elegidos.length}/${Config.tamanoEquipoDuelo}) ★`;
     } else {
       confirmar.disabled = this.modo === "desafio" && elegidos.length !== 1;
@@ -333,7 +335,7 @@ const SeleccionPoni = {
   }
 };
 
-// ---------- Selección de mejoras ("cartas") del Desafío ----------
+// Selección de mejoras ("cartas") del Desafío
 const Cartas = {
   seleccion: null,
 
@@ -375,10 +377,11 @@ const Cartas = {
     $("#cartas-confirmar").addEventListener("click", () => {
       if (this.seleccion) Desafio.aplicarMejora(this.seleccion);
     });
+    $("#cartas-atras").addEventListener("click", () => Pantallas.mostrar("ponis"));
   }
 };
 
-// ---------- Flujo del modo Desafío ----------
+// FLUJO DEL MODO DESAFIO
 // run = { ponyId, mejoras:[ids], vida, ronda, orden:[ids de los 5 ponis rivales],
 //         fase: "mejora" | "batalla", opciones:[ids de mejoras ofrecidas] }
 const Desafio = {
@@ -386,7 +389,7 @@ const Desafio = {
 
   nuevo(ponyId) {
     const otros = Ponis.filter((p) => p.id !== ponyId).map((p) => p.id);
-    this.run = { ponyId, mejoras: [], vida: null, ronda: 1, orden: Motor.barajar(otros), fase: "mejora", opciones: [] };
+    this.run = { ponyId, mejoras: [], vida: null, ronda: 1, orden: Motor.barajar(otros), fase: "mejora", opciones: [], pociones: Config.pocion.desafio };
     this.ofrecerMejoras();
   },
 
@@ -413,6 +416,7 @@ const Desafio = {
   aplicarMejora(id) {
     const m = MejorasPorId[id];
     this.run.mejoras.push(id);
+    this.run.pociones = (this.run.pociones ?? Config.pocion.desafio) + (m.efecto.pociones || 0); // "Poción" se suma a la mochila
     if (m.efecto.vidaMax && this.run.vida !== null) this.run.vida += m.efecto.vidaMax;
     this.run.fase = "batalla";
     this.run.opciones = [];
@@ -420,8 +424,9 @@ const Desafio = {
     Batalla.iniciarDesafio(this.run);
   },
 
-  // Ronda ganada: el poni recupera parte de la vida y se ofrecen nuevas mejoras
-  victoria(vidaFinal) {
+  // Ronda ganada: el poni recupera parte de la vida y aparecen las mejoras
+  victoria(vidaFinal, pociones) {
+    this.run.pociones = pociones; // se guarda lo de la mochila para la siguiente ronda
     const def = PonisPorId[this.run.ponyId];
     const vidaMax = Motor.crearCombatiente(def, { mejoras: this.run.mejoras }).vidaMax;
     this.run.vida = Math.min(vidaMax, vidaFinal + Math.round(vidaMax * Config.desafio.curacionEntreRondas));
@@ -447,74 +452,90 @@ const Desafio = {
   }
 };
 
-// ---------- Ajustes ----------
+// AJUSTES
+
+// MUSICA DE FONDO
+const Musica = {
+  el: $("#musica-fondo"),
+  pista: -1,
+  iniciar() {
+    this.el.volume = 0.3;
+    this.el.muted = Almacen.leer(Config.claves.musica, false);
+    this.elegir(Almacen.leer(Config.claves.pista, 0));
+  },
+  elegir(i) {
+    i = Config.pistas[i] ? i : 0;
+    if (i === this.pista) return;
+    const sonaba = !this.el.paused;
+    this.pista = i;
+    Almacen.guardar(Config.claves.pista, i);
+    this.el.src = Config.pistas[i].archivo;
+    if (sonaba) this.reproducir();
+  },
+  reproducir() { if (this.el.paused) this.el.play().catch(() => {}); },
+  silenciar(si) { this.el.muted = si; Almacen.guardar(Config.claves.musica, si); }
+};
+
+// AJUSTES (clima y musica)
+// La pausa de la batalla reutiliza la ventana:
+// opc = { titulo, texto, botones, alCerrar }
 const Ajustes = {
-  abrir() {
+  abrir(opc = {}) {
     const a = Clima.ajustes();
-    const opcionesClima = Object.entries(Clima.ETIQUETAS)
-      .map(([id, texto]) => `<option value="${id}" ${a.categoria === id ? "selected" : ""}>${texto}</option>`).join("");
+    const opciones = (lista, elegido) => lista.map(([v, t]) =>
+      `<option value="${v}" ${String(v) === String(elegido) ? "selected" : ""}>${escapar(t)}</option>`).join("");
     Modal.mostrar({
-      titulo: "Ajustes",
+      titulo: opc.titulo || "Ajustes",
+      alCerrar: opc.alCerrar,
+      botones: opc.botones || [{ texto: "Cerrar", clase: "is-light" }],
       html: `
-        <div class="ajuste-bloque">
-          <label class="label" for="aj-modo">Clima del escenario</label>
-          <div class="select"><select id="aj-modo">
-            <option value="auto" ${a.manual ? "" : "selected"}>Automático (Open-Meteo)</option>
-            <option value="manual" ${a.manual ? "selected" : ""}>Manual</option>
-          </select></div>
-          <p class="help" id="aj-estado"></p>
-        </div>
-        <div id="aj-manual" class="ajuste-bloque ${a.manual ? "" : "is-hidden"}">
+        ${opc.texto ? `<p class="mb-4">${escapar(opc.texto)}</p>` : ""}
+        <label class="label" for="aj-modo">Clima del escenario</label>
+        <div class="select"><select id="aj-modo">${opciones([["auto", "Automático (Open-Meteo)"], ["manual", "Manual"]], a.manual ? "manual" : "auto")}</select></div>
+        <p class="help mb-3" id="aj-estado"></p>
+        <div id="aj-manual" class="${a.manual ? "" : "is-hidden"}">
           <label class="label" for="aj-dia">Momento del día</label>
-          <div class="select mb-3"><select id="aj-dia">
-            <option value="dia" ${a.esDia ? "selected" : ""}>Día</option>
-            <option value="noche" ${a.esDia ? "" : "selected"}>Noche</option>
-          </select></div>
+          <div class="select mb-3"><select id="aj-dia">${opciones([["dia", "Día"], ["noche", "Noche"]], a.esDia ? "dia" : "noche")}</select></div>
           <label class="label" for="aj-clima">Clima</label>
-          <div class="select"><select id="aj-clima">${opcionesClima}</select></div>
+          <div class="select mb-3"><select id="aj-clima">${opciones(Object.entries(Clima.ETIQUETAS), a.categoria)}</select></div>
         </div>
-        <div class="ajuste-bloque"><button id="aj-actualizar" class="button is-info is-light" type="button">Actualizar clima ahora</button></div>
-        <div class="ajuste-bloque">
+        <label class="label" for="aj-pista">Música de fondo</label>
+        <div class="select"><select id="aj-pista">${opciones(Config.pistas.map((p, i) => [i, p.nombre]), Musica.pista)}</select></div>
+        <button id="aj-musica" class="button is-dark is-light ml-2" type="button">Música: ${Musica.el.muted ? "OFF" : "ON"}</button>
+        <div class="mt-4">
+          <button id="aj-actualizar" class="button is-info is-light" type="button">Actualizar clima ahora</button>
           <button id="aj-borrar" class="button is-danger is-light" type="button">Borrar datos guardados</button>
-          <p class="help">Elimina la partida del Desafío, el récord y estos ajustes.</p>
-        </div>`,
-      botones: [
-        {
-          texto: "Guardar", clase: "is-primary",
-          accion: () => {
-            Clima.guardarAjustes({
-              manual: $("#aj-modo").value === "manual",
-              esDia: $("#aj-dia").value === "dia",
-              categoria: $("#aj-clima").value
-            });
-            ChipClima.actualizar();
-            Menu.actualizar();
-          }
-        },
-        { texto: "Cancelar", clase: "is-light" }
-      ]
+        </div>`
     });
 
     const estado = () => {
-      const actual = Clima.actual();
-      $("#aj-estado").textContent = `Ahora: ${Clima.ETIQUETAS[actual.categoria]}, ${actual.esDia ? "de día" : "de noche"} · Fuente: ${actual.fuente}`;
+      const e = Clima.actual();
+      $("#aj-estado").textContent = `Ahora: ${Clima.ETIQUETAS[e.categoria]}, ${e.esDia ? "de día" : "de noche"} · Fuente: ${e.fuente}`;
     };
     estado();
-    $("#aj-modo").addEventListener("change", (ev) => $("#aj-manual").classList.toggle("is-hidden", ev.target.value !== "manual"));
-    $("#aj-actualizar").addEventListener("click", async () => {
+    $("#modal-cuerpo").onchange = (ev) => {
+      if (ev.target.id === "aj-pista") return Musica.elegir(Number(ev.target.value));
+      $("#aj-manual").classList.toggle("is-hidden", $("#aj-modo").value !== "manual");
+      Clima.guardarAjustes({ manual: $("#aj-modo").value === "manual", esDia: $("#aj-dia").value === "dia", categoria: $("#aj-clima").value });
+      ChipClima.actualizar();
+      estado();
+    };
+    $("#aj-musica").onclick = (ev) => {
+      Musica.silenciar(!Musica.el.muted);
+      ev.target.textContent = `Música: ${Musica.el.muted ? "OFF" : "ON"}`;
+    };
+    $("#aj-actualizar").onclick = async () => {
       $("#aj-estado").textContent = "Consultando Open-Meteo...";
       await Clima.refrescar();
       estado();
-    });
-    $("#aj-borrar").addEventListener("click", () => {
-      Modal.mostrar({
-        titulo: "¿Borrar datos guardados?",
-        texto: "Se eliminarán la partida del Desafío, el récord y los ajustes. Esta acción no se puede deshacer.",
-        botones: [
-          { texto: "Sí, borrar", clase: "is-danger", accion: () => { Almacen.borrarTodo(); location.reload(); } },
-          { texto: "Cancelar", clase: "is-light", accion: () => Ajustes.abrir() }
-        ]
-      });
+    };
+    $("#aj-borrar").onclick = () => Modal.mostrar({
+      titulo: "¿Borrar datos guardados?",
+      texto: "Se eliminarán la partida del Desafío, el récord y los ajustes. Esta acción no se puede deshacer.",
+      botones: [
+        { texto: "Sí, borrar", clase: "is-danger", accion: () => { Almacen.borrarTodo(); location.reload(); } },
+        { texto: "Cancelar", clase: "is-light", accion: () => Ajustes.abrir(opc) }
+      ]
     });
   }
 };

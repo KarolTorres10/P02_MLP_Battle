@@ -1,17 +1,14 @@
-// ===== Motor de batalla =====
-// Lógica pura del juego: no toca el DOM, así que se puede probar por separado.
-//
-// Un "combatiente" es un poni (o lobo) con vida, escudo, estados y habilidades.
-// Una "batalla" tiene dos "lados"; cada lado tiene un equipo de combatientes y uno activo.
-//   Desafío: lado 0 = tu poni (1 combatiente), lado 1 = el rival controlado por la IA.
-//   Duelo:   lado 0 = jugador 1 (3 ponis), lado 1 = jugador 2 (3 ponis).
+// MOTOR DE BATALLA
+// Lógica del juego: el DOM se conecta en batalla.js
+//   Batalla: lado 0 = jugador 1, lado 1 = jugador 2 (rival).
+
 const Motor = (() => {
-  const MULT_POTENCIADO = 1.5;  // el siguiente ataque hace +50%
-  const MULT_DEBILITADO = 0.6;  // los ataques de un combatiente debilitado hacen -40%
+  const MULT_POTENCIADO = 1.5;  // Potenciado = +50% ataque
+  const MULT_DEBILITADO = 0.6;  // Debilitado -40% ataque
 
   const factorMagia = (magia) => 0.7 + 0.1 * magia;
 
-  // ---------- Creación ----------
+  // CREACION
   // opciones: { escala:{vida,poder}, mejoras:[ids], vida }
   function crearCombatiente(def, opciones = {}) {
     const escala = opciones.escala || { vida: 1, poder: 1 };
@@ -24,6 +21,7 @@ const Motor = (() => {
       bonos: { danio: 0, cura: 0, escudo: 0, energia: 0, robovida: 0, regen: 0 },
       estados: { potenciado: false, debilitado: false },
       enfriamiento: {},
+      pp: Object.fromEntries(def.habilidades.map((h) => [h.id, h.pp ?? Infinity])), // puntos de poder: se reinician cada combate
       habilidades: def.habilidades,
       mejoras: []
     };
@@ -50,13 +48,13 @@ const Motor = (() => {
       modo,
       lados: lados.map((l) => ({
         nombre: l.nombre, esIA: Boolean(l.esIA),
-        equipo: l.equipo, activo: l.activo || 0, energia: 0
+        equipo: l.equipo, activo: l.activo || 0, energia: 0, pociones: l.pociones || 0
       })),
       turno: 0, ronda: 0, terminada: false, ganador: null
     };
   }
 
-  // ---------- Consultas ----------
+  // CONSULTAS
   const activo = (lado) => lado.equipo[lado.activo];
   const energiaMax = (c) => Math.min(Config.energiaMaxima, Config.energiaPorTurno + c.bonos.energia);
 
@@ -97,7 +95,7 @@ const Motor = (() => {
     }
   }
 
-  // Daño más alto que puede hacer con una sola habilidad (para el icono de espada del HUD)
+  // Daño mas alto que puede hacer con una sola habilidad (espada del HUD)
   function ataqueMaximo(c) {
     const danos = c.habilidades.filter((h) => h.tipo === "daño").map((h) => valorHabilidad(c, h));
     return danos.length ? Math.max(...danos) : 0;
@@ -111,11 +109,12 @@ const Motor = (() => {
     if (!h || c.vida <= 0) return false;
     if (lado.energia < h.costo) return false;
     if ((c.enfriamiento[h.id] || 0) > 0) return false;
-    if (h.tipo === "cura" && c.vida >= c.vidaMax) return false; // no tiene sentido curar con la vida llena
+    if (c.pp[h.id] <= 0) return false; // sin PP
+    if (h.tipo === "cura" && c.vida >= c.vidaMax) return false; // no cura con la vida llena
     return true;
   }
 
-  // ---------- Acciones ----------
+  // ACCIONES
   function infligir(objetivo, cantidad) {
     const absorbido = Math.min(objetivo.escudo, cantidad);
     objetivo.escudo -= absorbido;
@@ -142,6 +141,11 @@ const Motor = (() => {
 
     lado.energia -= h.costo;
     if (h.enfriamiento) c.enfriamiento[h.id] = h.enfriamiento;
+    c.pp[h.id] -= 1; // cada uso gasta 1 PP, acierte o no
+    if (Math.random() * 100 >= (h.precision ?? 100)) { // precisión = % de acierto; si falla, no tiene efecto
+      eventos.push({ t: "falla", lado: miLado, objetivo: ["daño", "debilitar"].includes(h.tipo) ? suLado : miLado });
+      return eventos;
+    }
 
     switch (h.tipo) {
       case "daño": {
@@ -187,17 +191,21 @@ const Motor = (() => {
     return eventos;
   }
 
-  // Cambia el poni activo. gratis=true se usa cuando el activo cae y hay que reemplazarlo.
-  function cambiarPoni(b, ladoIdx, idx, gratis = false) {
+  // Cambia el poni activo (el cambio lo "paga" el turno, no la energía; la interfaz lo valida).
+  function cambiarPoni(b, ladoIdx, idx) {
     const lado = b.lados[ladoIdx];
     const nuevo = lado.equipo[idx];
     if (!nuevo || nuevo.vida <= 0 || idx === lado.activo) return false;
-    if (!gratis) {
-      if (b.terminada || b.turno !== ladoIdx || lado.energia < Config.costoCambioPoni) return false;
-      lado.energia -= Config.costoCambioPoni;
-    }
     lado.activo = idx;
     return true;
+  }
+
+  // Poción de la mochila: cura al poni activo y gasta una. Devuelve los eventos, o null si no se puede usar.
+  function usarPocion(b) {
+    const lado = b.lados[b.turno], c = activo(lado);
+    if (b.terminada || lado.pociones <= 0 || c.vida >= c.vidaMax) return null;
+    lado.pociones -= 1;
+    return [{ t: "pocion", lado: b.turno }, { t: "cura", lado: b.turno, cantidad: curar(c, Config.pocion.cura) }];
   }
 
   function iniciarTurno(b) {
@@ -244,7 +252,7 @@ const Motor = (() => {
     return b.terminada;
   }
 
-  // ---------- Inteligencia artificial (rivales del Desafío) ----------
+  // IA DE LOS RIVALES
   // Devuelve { tipo:"habilidad", idx } o { tipo:"fin" }
   function decidirIA(b) {
     const lado = b.lados[b.turno];
@@ -256,7 +264,8 @@ const Motor = (() => {
     if (!usables.length) return { tipo: "fin" };
 
     const por = (tipo) => usables.filter((x) => x.h.tipo === tipo);
-    const danos = por("daño").sort((a, z) => z.v - a.v);
+    const prec = (x) => x.h.precision ?? 100;
+    const danos = por("daño").sort((a, z) => z.v * prec(z) - a.v * prec(a)); // la IA prefiere el mayor daño esperado
     const elegir = (x) => ({ tipo: "habilidad", idx: x.idx });
 
     // 1. Si puede rematar al rival, lo hace
@@ -277,7 +286,7 @@ const Motor = (() => {
     return resto ? elegir(resto) : { tipo: "fin" };
   }
 
-  // ---------- Modo Desafío ----------
+  // MODO DESAFIO
   // Las estadísticas del rival crecen de forma exponencial con la ronda.
   function escalaRonda(ronda) {
     return {
@@ -318,7 +327,7 @@ const Motor = (() => {
   return {
     crearCombatiente, aplicarMejora, crearBatalla,
     activo, energiaMax, valorHabilidad, valorActual, textoEfecto, ataqueMaximo,
-    puedeUsar, usarHabilidad, cambiarPoni, iniciarTurno, finTurno,
+    puedeUsar, usarHabilidad, cambiarPoni, usarPocion, iniciarTurno, finTurno,
     necesitaCambio, revisarFin, decidirIA,
     escalaRonda, crearRivalDesafio, sortearMejoras, barajar
   };
