@@ -29,8 +29,6 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
   box-shadow: 0 0 0 .3cqw #1c0a26, inset 0 0 0 .3cqw #5d2b6e;
 }
 
-/* "all: unset" parte de cero para dibujar el botón pixel-art. Con :where() su especificidad es mínima,
-   así que reglas como .btn-atras o .btn-pausa pueden colocar el botón sin pelearse con esta. */
 :where(.juego) .btn-pix {
   all: unset;
   box-sizing: border-box;
@@ -67,11 +65,8 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 }
 .chip-clima .icono { font-size: 2.2cqw; }
 .chip-clima b { font-size: 1.9cqw; }
-/* Sin chip del clima en selección, mejoras y batalla (el clima se cambia desde Ajustes o la pausa) */
 .juego[data-pantalla="ponis"] .chip-clima, .juego[data-pantalla="cartas"] .chip-clima, .juego[data-pantalla="batalla"] .chip-clima { display: none; }
 .juego[data-pantalla="menu"] .chip-clima { top: 1.2cqw; }
-
-/* INICIO = chip clima */
 .juego[data-pantalla="inicio"] .chip-clima { top: auto; bottom: 1.5cqw; right: 1.5cqw; }
 
 .aviso {
@@ -273,10 +268,11 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 .flotante.escudo { color: #9ad4ff; }
 .flotante.energia, .flotante.estado { color: #ffe45e; font-size: 2.6cqw; }
 @keyframes subir { from { transform: translate(-50%, 0); opacity: 1; } 70% { opacity: 1; } to { transform: translate(-50%, -9cqw); opacity: 0; } }
-.proyectil { position: absolute; top: 28cqw; font-size: 5cqw; transform: translate(-50%, -50%); transition: left .4s linear; }
-/* Caja de mensajes de la batalla */
+.proyectil { position: absolute; top: 28cqw; font-size: 5.5cqw; transform: translate(-50%, -50%); transition: left .4s linear; }
+.proyectil .proyectil-img { display: block; width: 7.2cqw; height: 7.2cqw; margin: auto; object-fit: contain; object-position: center; transform: scale(2.25); image-rendering: pixelated; border-radius: .4cqw; }
+
 .anuncio { position: absolute; left: 47.3%; top: 1.2cqw; width: 24cqw; height: 9cqw; margin-left: -12.5cqw; padding: .6cqw 1cqw; font-size: 1.3cqw; line-height: 1.25; text-align: center;
-  display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; } /* tamaño fijo */
+  display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; }
 .anuncio div { opacity: .55; }
 .anuncio div:last-child { opacity: 1; font-weight: 700; }
 
@@ -285,22 +281,54 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 #energia-valor { width: 8.6cqw; height: 8.6cqw; border-radius: 50%; display: grid; place-items: center; font-size: 3cqw; background: #6b3f9a; border: .45cqw solid #d9b8ff; box-shadow: 0 0 0 .3cqw #1c0a26, inset 0 0 0 .3cqw #8b5fc0; }
 .mano { flex: 1; display: flex; justify-content: center; gap: 1cqw; }
 .carta-hab {
-  all: unset; box-sizing: border-box; position: relative; display: flex; flex-direction: column;
+  all: unset; box-sizing: border-box; position: relative; display: flex; flex-direction: column; justify-content: space-between;
   width: 12.4cqw; height: 14.8cqw; cursor: pointer;
   background: #34163d; border: .35cqw solid #c9a0ef; border-radius: .9cqw;
   box-shadow: 0 0 0 .25cqw #1c0a26, inset 0 0 0 .25cqw #5d2b6e; transition: transform .1s;
 }
 .carta-hab:hover:not(.no-usable) { transform: translateY(-.9cqw); border-color: #ffe45e; }
-.carta-hab .cabecera { display: flex; align-items: center; gap: .5cqw; padding: .5cqw .5cqw 0; min-height: 4.4cqw; }
+.carta-hab .cabecera { flex: none; display: flex; align-items: center; gap: .5cqw; padding: .5cqw .5cqw 0; min-height: 3.6cqw; }
 .carta-hab .costo { flex: none; width: 3cqw; height: 3cqw; border-radius: 50%; display: grid; place-items: center; background: #c9a3f0; color: #3a1840; font-weight: 700; font-size: 1.8cqw; border: .2cqw solid #f0dcff; }
-.carta-hab .nombre-hab { font-size: 1.35cqw; font-weight: 700; line-height: 1.1; color: #fff2b8; padding-right: .7cqw; }
-.carta-hab .icono-hab { flex: 1; display: grid; place-items: center; font-size: 5.2cqw; }
-.carta-hab .efecto-hab { text-align: center; font-size: 1.45cqw; padding: 0 .3cqw .2cqw; color: #fff2b8; line-height: 1.1; }
-.carta-hab .pp-hab { display: flex; justify-content: space-between; white-space: nowrap; padding: 0 .7cqw .6cqw; font-size: 1cqw; color: #cdb6e0; }
+.carta-hab .nombre-hab { font-size: 1.22cqw; font-weight: 700; line-height: 1.1; color: #fff2b8; padding-right: .7cqw; }
+
+/* Centrado exacto y tamaño equilibrado en el espacio entre cabecera y efecto/fuerza */
+.carta-hab .icono-hab {
+  flex: 1 1 auto;
+  min-height: 5.8cqw;
+  width: 100%;
+  padding: .2cqw .5cqw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5.8cqw;
+  line-height: 1;
+  overflow: hidden;
+  border-radius: .45cqw;
+}
+.carta-hab .icono-hab-img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  margin: 0 auto;
+  object-fit: contain;
+  object-position: center;
+  transform: scale(2.25);
+  transform-origin: center center;
+  image-rendering: pixelated;
+}
+.carta-hab .icono-hab-img.es-carta-completa {
+  transform: scale(1.25);
+}
+
+.carta-hab .efecto-hab { flex: none; text-align: center; font-size: 1.4cqw; padding: .1cqw .3cqw .2cqw; color: #fff2b8; line-height: 1.1; }
+.carta-hab .pp-hab { flex: none; display: flex; justify-content: space-between; white-space: nowrap; padding: 0 .7cqw .6cqw; font-size: 1cqw; color: #cdb6e0; }
 .carta-hab .pp-hab.agotado { color: #ff8a8a; }
 .carta-hab .tecla { position: absolute; top: .3cqw; right: .5cqw; font-size: 1.1cqw; color: #9a7bb0; }
 .carta-hab.no-usable { opacity: .45; filter: grayscale(.6); cursor: not-allowed; }
 .carta-hab .espera { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(20, 5, 30, .72); border-radius: .6cqw; font-size: 2.1cqw; font-weight: 700; text-align: center; line-height: 1.2; }
+
 /* Botones de accion a la derecha de habilidades */
 .acciones { flex: none; align-self: stretch; width: 14.5cqw; display: flex; flex-direction: column; gap: .7cqw; }
 .acciones .btn-pix { flex: 1; min-height: 0; width: 100%; padding: 0 !important; font-size: 1.45cqw !important; }
@@ -335,9 +363,9 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 @media (orientation: portrait) and (max-width: 820px) { .girar { display: flex; } }
 
 .juego {
-  background-color: #2b1a44;             /* color fondo predeterminado */
+  background-color: #2b1a44;
   background-image: var(--fondo);
-  background-size: cover;                /* Formato 16:9 */
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   image-rendering: pixelated;
@@ -377,7 +405,6 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 }
 @media (prefers-reduced-motion: reduce) { .titulo-juego img { animation: none; } }
 
-/* Tamaño chip clima y btn Ajustes */
 .juego[data-pantalla="inicio"] .chip-clima {
   top: auto; bottom: 1.5cqw; right: 1.5cqw;
   height: 3.6cqw; padding: 0 1.2cqw; gap: .6cqw; font-size: 1.2cqw; border-radius: .7cqw;
@@ -400,8 +427,15 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 .modal .opcion-poni.actual { border-color: #ffe45e; }
 
 /* Ajustes extras */
-.luchador { bottom: 21.4cqw; }                          /* FONDO BATALLA: Posicion de ponys */
-#ponis-sprite { bottom: 1cqw; }                         /* Pies sobre plataforma */
-.menu-botones { width: 37cqw; }                         /* vista casita de fondo */
+.luchador { bottom: 21.4cqw; }
+#ponis-sprite { bottom: 1cqw; }
+.menu-botones { width: 37cqw; }
 #pantalla-cartas .encabezado { left: 3cqw; transform: none; font-size: 3.3cqw; }
 .cartas-poni { top: 8.2cqw; height: 11.4cqw; }
+.carta-icono {
+  width: 100%;
+  max-height: 110px;
+  object-fit: contain;
+  display: block;
+  image-rendering: pixelated;
+}

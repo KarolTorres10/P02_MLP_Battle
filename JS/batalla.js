@@ -53,6 +53,22 @@ const Batalla = {
   // DIBUJO
   indiceMano() { return this.b.modo === "desafio" ? 0 : this.b.turno; },
 
+  esRutaImagen(valor) {
+    return typeof valor === "string" && (valor.includes("/") || /\.(png|jpe?g|webp|gif)$/i.test(valor));
+  },
+
+  esCartaCompleta(ruta) {
+    return typeof ruta === "string" && /(?:^|\/)TS_H3(?:_2)?\.jpe?g$/i.test(ruta);
+  },
+
+  renderIcono(icono, claseExtra = "") {
+    if (this.esRutaImagen(icono)) {
+      const extraCarta = this.esCartaCompleta(icono) ? "es-carta-completa" : "";
+      return `<img class="icono-hab-img ${extraCarta} ${claseExtra}".trim() src="${escapar(icono)}" alt="">`;
+    }
+    return escapar(icono ?? "");
+  },
+
   render() {
     this.renderLado(0);
     this.renderLado(1);
@@ -78,7 +94,6 @@ const Batalla = {
     $(".hud-escudo b", hud).textContent = c.escudo;
     $(".hud-ataque b", hud).textContent = Motor.ataqueMaximo(c);
 
-    // Minirretratos del equipo (Duelo)
     const equipo = $(".hud-equipo", hud);
     if (lado.equipo.length > 1) {
       equipo.innerHTML = lado.equipo.map((p, k) => {
@@ -89,14 +104,13 @@ const Batalla = {
       equipo.innerHTML = "";
     }
 
-    // Luchador en el campo
     const caja = $(i === 0 ? "#luchador-a" : "#luchador-b");
     const img = $("img", caja);
     if (img.getAttribute("src") !== c.sprite) {
       img.src = c.sprite;
-      $(".anim", caja).className = "anim"; // al entrar un poni nuevo se quita la animación de caída
+      $(".anim", caja).className = "anim";
     }
-    const vaALaDerecha = i === 0; // el lado A mira a la derecha, el B a la izquierda
+    const vaALaDerecha = i === 0;
     img.classList.toggle("volteado", vaALaDerecha ? c.mira === "izquierda" : c.mira === "derecha");
     caja.classList.toggle("lobo", c.id === "lobo-madera");
     $(".estados", caja).textContent = (c.estados.potenciado ? "🔥" : "") + (c.estados.debilitado ? "💧" : "");
@@ -116,7 +130,7 @@ const Batalla = {
       return `
         <button class="carta-hab ${usable ? "" : "no-usable"}" type="button" data-idx="${i}" title="${escapar(titulo)}">
           <div class="cabecera"><span class="costo">${h.costo}</span><span class="nombre-hab">${escapar(h.nombre)}</span></div>
-          <div class="icono-hab">${h.icono}</div>
+          <div class="icono-hab">${this.renderIcono(h.icono)}</div>
           <div class="efecto-hab">${escapar(Motor.textoEfecto(c, h))}</div>
           <div class="pp-hab ${c.pp[h.id] <= 0 ? "agotado" : ""}"><span>PP ${h.pp === undefined ? "∞" : `${c.pp[h.id]}/${h.pp}`}</span><span title="Precisión">🎯${h.precision ?? 100}%</span></div>
           <span class="tecla">${i + 1}</span>
@@ -146,9 +160,8 @@ const Batalla = {
     while (this.pausado) await esperar(120);
   },
 
-  posX: (lado) => (lado === 0 ? 23 : 77), // posición horizontal (cqw) de cada luchador
+  posX: (lado) => (lado === 0 ? 23 : 77),
 
-  // Cuadro de mensajes: muestra las últimas 3 acciones de la partida
   anuncio(texto) {
     this.log = [...(this.log || []).slice(-2), texto];
     $("#anuncio").innerHTML = this.log.map((t) => `<div>${escapar(t)}</div>`).join("");
@@ -172,7 +185,6 @@ const Batalla = {
     }
   },
 
-
   flotante(lado, texto, clase, desfase = 0) {
     const el = document.createElement("div");
     el.className = `flotante ${clase}`;
@@ -186,7 +198,7 @@ const Batalla = {
   animacion(lado, clase, ms) {
     const anim = $(".anim", $(lado === 0 ? "#luchador-a" : "#luchador-b"));
     anim.classList.remove(clase);
-    void anim.offsetWidth; // reinicia la animación CSS
+    void anim.offsetWidth;
     anim.classList.add(clase);
     if (clase !== "derrotado") setTimeout(() => anim.classList.remove(clase), ms);
   },
@@ -195,7 +207,7 @@ const Batalla = {
     return new Promise((resolver) => {
       const p = document.createElement("div");
       p.className = "proyectil";
-      p.textContent = icono;
+      p.innerHTML = this.renderIcono(icono, "proyectil-img");
       p.style.left = this.posX(lado) + "cqw";
       $("#campo").appendChild(p);
       void p.offsetWidth;
@@ -204,7 +216,6 @@ const Batalla = {
     });
   },
 
-  // Reproduce los eventos que devuelve el motor
   async animar(eventos, sesion) {
     const uso = eventos.find((e) => e.t === "usa");
     if (uso) this.anuncio(this.mensaje(uso));
@@ -215,7 +226,7 @@ const Batalla = {
       await this.proyectil(uso.lado, uso.habilidad.icono);
       if (sesion !== this.sesion) return;
     }
-    this.render(); // la vida y el escudo se actualizan justo al impactar
+    this.render();
 
     for (const e of eventos) {
       if (e.t !== "usa") this.anuncio(this.mensaje(e));
@@ -309,7 +320,6 @@ const Batalla = {
     return Boolean(b) && !this.ocupado && !b.terminada && b.turno === this.indiceMano() && Pantallas.actual === "batalla";
   },
 
-  // Botón "Cambiar poni" (Duelo): elegir al que entra termina el turno
   async cambiar() {
     if (!this.puedeActuar()) return;
     const b = this.b, i = b.turno, lado = b.lados[i], sesion = this.sesion;
@@ -319,14 +329,13 @@ const Batalla = {
     this.ocupado = true;
     const idx = await this.elegirReemplazo(i, true);
     if (sesion !== this.sesion) return;
-    if (idx === null) { this.ocupado = false; return this.render(); } // canceló
+    if (idx === null) { this.ocupado = false; return this.render(); }
     Motor.cambiarPoni(b, i, idx);
     this.anuncio(`¡Va ${Motor.activo(lado).nombre}!`);
     this.render();
     await this.pasarTurno(sesion);
   },
 
-  // Botón "Mochila": abre los objetos; usar una poción cura y termina el turno
   mochila() {
     if (!this.puedeActuar()) return;
     Modal.mostrar({
@@ -346,8 +355,6 @@ const Batalla = {
     await this.pasarTurno(sesion);
   },
 
-  // Tras cada acción: ¿terminó la batalla? ¿hay que reemplazar a un poni caído?
-  // Devuelve true si el flujo debe detenerse (batalla terminada o salida del juego).
   async resolverCaidas(sesion) {
     const b = this.b;
     if (Motor.revisarFin(b)) {
@@ -392,7 +399,6 @@ const Batalla = {
     });
   },
 
-  // ---------- Fin del combate ----------
   async terminar(sesion) {
     const b = this.b;
     this.ocupado = true;
@@ -423,12 +429,11 @@ const Batalla = {
     }
   },
 
-  // ---------- Pausa ----------
   pausar() {
     if (this.pausado || !this.b || this.b.terminada || Modal.abierto()) return;
     this.pausado = true;
     const reanudar = () => { this.pausado = false; };
-    Ajustes.abrir({ // la pausa incluye los ajustes de clima y música
+    Ajustes.abrir({
       titulo: "Pausa",
       texto: this.b.modo === "desafio"
         ? "Si sales, tu partida del Desafío queda guardada al inicio de esta ronda."
@@ -441,7 +446,6 @@ const Batalla = {
     });
   },
 
-  // ---------- Eventos ----------
   iniciarEventos() {
     $("#mano").addEventListener("click", (e) => {
       const carta = e.target.closest(".carta-hab");
@@ -451,7 +455,6 @@ const Batalla = {
     $("#btn-pausa").addEventListener("click", () => this.pausar());
     $("#btn-cambiar").addEventListener("click", () => this.cambiar());
     $("#btn-mochila").addEventListener("click", () => this.mochila());
-    // Atajos: 1-5 usan habilidades, Enter o E terminan el turno, P pausa
     document.addEventListener("keydown", (e) => {
       if (Pantallas.actual !== "batalla" || Modal.abierto()) return;
       if (/^[1-9]$/.test(e.key)) this.jugar(Number(e.key) - 1);
