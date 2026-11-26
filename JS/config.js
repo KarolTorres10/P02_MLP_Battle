@@ -28,7 +28,7 @@ const Config = {
     { nombre: "Mis ojos lloran por ti", archivo: "ASSETS/Audio/Big Boy — Mis Ojos Lloran Por Ti [Letra].mp3"},
     { nombre: "Rompe", archivo: "ASSETS/Audio/Daddy Yankee - Rompe (Lyrics).mp3"},
     { nombre: "Duro 2 horas", archivo: "ASSETS/Audio/Duro 2 horas - Faraón Love Shady (Vídeo Oficial).mp3"},
-    { nombre: "Vaquero", archivo: "ASSETS/Audio/La Dinastía - Vaquero (Letra) mami, soy tu vaquero 🤠🥵.mp3"},
+    { nombre: "Vaquero", archivo: "ASSETS/Audio/Vaquero (Remix).mp3"},
     { nombre: "Bad romance", archivo: "ASSETS/Audio/Lady Gaga - Bad Romance (Official Music Video).mp3"}
   ],
 
