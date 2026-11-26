@@ -269,7 +269,7 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 .flotante.energia, .flotante.estado { color: #ffe45e; font-size: 2.6cqw; }
 @keyframes subir { from { transform: translate(-50%, 0); opacity: 1; } 70% { opacity: 1; } to { transform: translate(-50%, -9cqw); opacity: 0; } }
 .proyectil { position: absolute; top: 28cqw; font-size: 5.5cqw; transform: translate(-50%, -50%); transition: left .4s linear; }
-.proyectil .proyectil-img { display: block; width: 7.2cqw; height: 7.2cqw; margin: auto; object-fit: contain; object-position: center; transform: scale(1.62); image-rendering: pixelated; border-radius: .4cqw; }
+.proyectil .proyectil-img { display: block; width: 7.2cqw; height: 7.2cqw; margin: auto; object-fit: contain; object-position: center; transform: scale(1.12); image-rendering: pixelated; border-radius: .4cqw; }
 
 .anuncio { position: absolute; left: 47.3%; top: 1.2cqw; width: 24cqw; height: 9cqw; margin-left: -12.5cqw; padding: .6cqw 1cqw; font-size: 1.3cqw; line-height: 1.25; text-align: center;
   display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; }
@@ -291,12 +291,12 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
 .carta-hab .costo { flex: none; width: 3cqw; height: 3cqw; border-radius: 50%; display: grid; place-items: center; background: #c9a3f0; color: #3a1840; font-weight: 700; font-size: 1.8cqw; border: .2cqw solid #f0dcff; }
 .carta-hab .nombre-hab { font-size: 1.22cqw; font-weight: 700; line-height: 1.1; color: #fff2b8; padding-right: .7cqw; }
 
-/* Centrado y escala intermedia entre cabecera y efecto/fuerza */
+/* Centrado compacto entre cabecera y efecto/fuerza */
 .carta-hab .icono-hab {
-  flex: 1 1 auto;
-  min-height: 5.2cqw;
-  width: 100%;
-  padding: .2cqw .5cqw;
+  flex: none;
+  height: 4.6cqw;
+  width: calc(100% - .8cqw);
+  margin: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -314,12 +314,12 @@ html, body { margin: 0; height: 100%; background: #12081a; overflow: hidden; }
   margin: 0 auto;
   object-fit: contain;
   object-position: center;
-  transform: scale(1.62);
+  transform: scale(1.12);
   transform-origin: center center;
   image-rendering: pixelated;
 }
 .carta-hab .icono-hab-img.es-carta-completa {
-  transform: scale(1.25);
+  transform: scale(1.05);
 }
 
 .carta-hab .efecto-hab { flex: none; text-align: center; font-size: 1.4cqw; padding: .1cqw .3cqw .2cqw; color: #fff2b8; line-height: 1.1; }
