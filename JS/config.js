@@ -29,7 +29,8 @@ const Config = {
     { nombre: "Rompe", archivo: "ASSETS/Audio/Daddy Yankee - Rompe (Lyrics).mp3"},
     { nombre: "Duro 2 horas", archivo: "ASSETS/Audio/Duro 2 horas - Faraón Love Shady (Vídeo Oficial).mp3"},
     { nombre: "Vaquero", archivo: "ASSETS/Audio/Vaquero (Remix).mp3"},
-    { nombre: "Bad romance", archivo: "ASSETS/Audio/Lady Gaga - Bad Romance (Official Music Video).mp3"}
+    { nombre: "Bad romance", archivo: "ASSETS/Audio/Lady Gaga - Bad Romance (Official Music Video).mp3"},
+    { nombre: "DEPENDS", archivo: "ASSETS/Audio/Depends.mp3"}
   ],
 
   // Claves de localStorage
